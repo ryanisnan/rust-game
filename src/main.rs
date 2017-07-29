@@ -1,3 +1,6 @@
+mod world;
+
 fn main() {
-    println!("Hello, world!");
+    let world = world::World::generate(String::from("Random world"), 4, 4);
+    println!("World: {:#?}", world);
 }
