@@ -69,8 +69,8 @@ impl World {
         let idx_top = (top / self.tile_height).floor() as usize;
         let idx_bottom = (bottom / self.tile_height).ceil() as usize;
 
-        println!("Indexes in the world are: Left - {}, Right - {}", idx_left, idx_right);
-        println!("Indexes in the world are: Top - {}, Bottom - {}", idx_top, idx_bottom);
+        // println!("Indexes in the world are: Left - {}, Right - {}", idx_left, idx_right);
+        // println!("Indexes in the world are: Top - {}, Bottom - {}", idx_top, idx_bottom);
 
         let mut tmp_rows: Vec<Vec<&Tile>> = Vec::new();
         for i in idx_top..(idx_bottom + 1) {

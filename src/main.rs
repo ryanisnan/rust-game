@@ -41,6 +41,9 @@ fn main() {
 
         let tiles = world.get_tiles(cam.get_left(), cam.get_right(), cam.get_top(), cam.get_bottom());
 
+        let x_offset = cam.get_left() % world.tile_width;
+        let y_offset = cam.get_top() % world.tile_height;
+
         // println!("{:#?}", event);
         // This runs many times per second...
         window.draw_2d(&event, |context, graphics| {
@@ -53,7 +56,7 @@ fn main() {
                     let j = j as f64;
                     piston_window::rectangle(
                         tile.get_color(),
-                        [j * world.tile_width, i * world.tile_height, world.tile_height, world.tile_width],
+                        [j * world.tile_width - x_offset, i * world.tile_height - y_offset, world.tile_height, world.tile_width],
                         context.transform,
                         graphics
                     );
