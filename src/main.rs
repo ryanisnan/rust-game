@@ -6,7 +6,7 @@ pub mod world;
 pub mod camera;
 
 fn main() {
-    let mut world = world::World::generate(String::from("Random world"), 256, 256);
+    let mut world = world::World::generate_world_1();
     // println!("World: {:#?}", world);
 
     // Draws a new window
@@ -19,7 +19,7 @@ fn main() {
     .build()
     .unwrap();
 
-    let mut cam = camera::Camera::new(800, 800);
+    let mut cam = camera::Camera::new(800, 800, world.get_width(), world.get_height());
 
     while let Some(event) = window.next() {
         match event.press_args() {

@@ -26,7 +26,7 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new(viewport_height: u32, viewport_width: u32) -> Camera {
+    pub fn new(viewport_height: u32, viewport_width: u32, max_x: f64, max_y: f64) -> Camera {
         let cam = Camera {
             x: viewport_width as f64 / 2.0,
             y: viewport_height as f64 / 2.0,
@@ -40,9 +40,9 @@ impl Camera {
             vert_scroll: 10.0,
 
             min_x: 0.0,
-            max_x: 1600.0,
+            max_x,
             min_y: 0.0,
-            max_y: 1600.0,
+            max_y,
 
             viewport_width,
             viewport_height
