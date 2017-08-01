@@ -2,6 +2,7 @@ extern crate piston_window;
 
 use piston_window::*;
 
+pub mod assets;
 pub mod world;
 pub mod camera;
 

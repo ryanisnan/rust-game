@@ -7,3 +7,5 @@ authors = ["ryanisnan <ryanisnan@gmail.com>"]
 rand = "0.3.16"
 piston = "0.32.0"
 piston_window = "0.61.0"
+piston2d_sprite = "0.36.0"
+find_folder = "0.3.0"
