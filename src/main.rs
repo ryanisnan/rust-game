@@ -45,8 +45,8 @@ impl event::EventHandler for MainState {
                     ctx,
                     DrawMode::Fill,
                     graphics::Rect {
-                        x: j * self.world.tile_width - x_offset,
-                        y: i * self.world.tile_height - y_offset,
+                        x: j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset,
+                        y: i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset,
                         w: self.world.tile_width,
                         h: self.world.tile_height
                     }
@@ -55,6 +55,31 @@ impl event::EventHandler for MainState {
         }
         graphics::present(ctx);
         Ok(())
+    }
+
+    fn key_down_event(&mut self, keycode: event::Keycode, keymod: event::Mod, repeat: bool) {
+        match keycode {
+            event::Keycode::Left => {
+                self.camera.move_left();
+            },
+            event::Keycode::Right => {
+                self.camera.move_right();
+            },
+            event::Keycode::Down => {
+                self.camera.move_down();
+            },
+            event::Keycode::Up => {
+                self.camera.move_up();
+            },
+            _ => {
+            }
+        }
+        println!(
+            "Key pressed: {:?}, modifier {:?}, repeat: {}",
+            keycode,
+            keymod,
+            repeat
+        );
     }
 }
 
@@ -71,7 +96,7 @@ fn main() {
     // while let Some(event) = window.next() {
     //     match event.press_args() {
     //         Some(piston_window::Button::Keyboard(piston_window::Key::Left)) => {
-    //             cam.move_left();
+    //
     //         },
     //         Some(piston_window::Button::Keyboard(piston_window::Key::Right)) => {
     //             cam.move_right();
