@@ -40,7 +40,7 @@ impl event::EventHandler for MainState {
             for (j, tile) in row.iter().enumerate() {
                 let j = j as f32;
 
-                graphics::set_color(ctx, graphics::Color::from(tile.get_color()));
+                graphics::set_color(ctx, Color::from(tile.get_color()))?;
                 graphics::rectangle(
                     ctx,
                     DrawMode::Fill,
@@ -53,16 +53,6 @@ impl event::EventHandler for MainState {
                 )?;
             }
         }
-        // graphics::circle(
-        //     ctx,
-        //     DrawMode::Fill,
-        //     Point {
-        //         x: self.pos_x,
-        //         y: 380.0,
-        //     },
-        //     100.0,
-        //     32,
-        // )?;
         graphics::present(ctx);
         Ok(())
     }
@@ -96,28 +86,6 @@ fn main() {
     //         None => ()
     //     }
     //
-    //     let tiles = world.get_tiles(cam.get_left(), cam.get_right(), cam.get_top(), cam.get_bottom());
-    //     let x_offset = cam.get_left() % world.tile_width;
-    //     let y_offset = cam.get_top() % world.tile_height;
     //
-    //     // println!("{:#?}", event);
-    //     // This runs many times per second...
-    //     window.draw_2d(&event, |context, graphics| {
-    //
-    //         piston_window::clear([1.0; 4], graphics);
-    //
-    //         for (i, row) in tiles.iter().enumerate() {
-    //             let i = i as f64;
-    //             for (j, tile) in row.iter().enumerate() {
-    //                 let j = j as f64;
-    //                 piston_window::rectangle(
-    //                     tile.get_color(),
-    //                     [j * world.tile_width - x_offset, i * world.tile_height - y_offset, world.tile_height, world.tile_width],
-    //                     context.transform,
-    //                     graphics
-    //                 );
-    //             }
-    //         }
-    //     });
     // }
 }
