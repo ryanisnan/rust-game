@@ -32,20 +32,20 @@ pub struct World {
     pub data: Vec<Vec<Tile>>,
     pub rows: u32,
     pub columns: u32,
-    pub tile_height: f64,
-    pub tile_width: f64,
+    pub tile_height: f32,
+    pub tile_width: f32,
 }
 
 impl World {
-    pub fn get_width(&self) -> f64 {
-        self.columns as f64 * self.tile_width
+    pub fn get_width(&self) -> f32 {
+        self.columns as f32 * self.tile_width
     }
 
-    pub fn get_height(&self) -> f64 {
-        self.rows as f64 * self.tile_height
+    pub fn get_height(&self) -> f32 {
+        self.rows as f32 * self.tile_height
     }
 
-    pub fn get_tiles(&self, left: f64, right: f64, top: f64, bottom: f64) -> Vec<Vec<&Tile>> {
+    pub fn get_tiles(&self, left: f32, right: f32, top: f32, bottom: f32) -> Vec<Vec<&Tile>> {
         let idx_left = (left / self.tile_width).floor() as usize;
         let mut idx_right = (right / self.tile_width).floor() as usize;
         let idx_top = (top / self.tile_height).floor() as usize;
@@ -59,9 +59,9 @@ impl World {
             idx_bottom = (self.rows - 1) as usize;
         }
 
-        println!("Cam stuff: {} {} {} {}", left, right, top, bottom);
-        println!("Indexes in the world are: Left - {}, Right - {}", idx_left, idx_right);
-        println!("Indexes in the world are: Top - {}, Bottom - {}", idx_top, idx_bottom);
+        // println!("Cam stuff: {} {} {} {}", left, right, top, bottom);
+        // println!("Indexes in the world are: Left - {}, Right - {}", idx_left, idx_right);
+        // println!("Indexes in the world are: Top - {}, Bottom - {}", idx_top, idx_bottom);
 
         let mut tmp_rows: Vec<Vec<&Tile>> = Vec::new();
         for i in idx_top..(idx_bottom + 1) {
@@ -80,7 +80,7 @@ impl World {
         for i in 0..rows {
             let mut row: Vec<Tile> = Vec::new();
             for j in 0..columns {
-                let x = rand::random::<f64>();
+                let x = rand::random::<f32>();
                 if x >= 0.25 {
                     row.push(Tile::Grass);
                 } else if x >= 0.05 {

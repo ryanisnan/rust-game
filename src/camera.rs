@@ -1,40 +1,40 @@
 #[derive(Debug)]
 pub struct Camera {
     // Position in the world
-    x: f64,
-    y: f64,
+    x: f32,
+    y: f32,
 
     // Boundaries of the viewport on the world
-    left: f64,
-    right: f64,
-    top: f64,
-    bottom: f64,
+    left: f32,
+    right: f32,
+    top: f32,
+    bottom: f32,
 
     // Amounts that the camera should move
-    horiz_scroll: f64,
-    vert_scroll: f64,
+    horiz_scroll: f32,
+    vert_scroll: f32,
 
     // Bounds related to an environment - can also be the size of the world
-    min_x: f64,
-    max_x: f64,
-    min_y: f64,
-    max_y: f64,
+    min_x: f32,
+    max_x: f32,
+    min_y: f32,
+    max_y: f32,
 
     // Viewport Information
-    viewport_width: u32,
-    viewport_height: u32,
+    viewport_width: f32,
+    viewport_height: f32,
 }
 
 impl Camera {
-    pub fn new(viewport_height: u32, viewport_width: u32, max_x: f64, max_y: f64) -> Camera {
+    pub fn new(viewport_height: f32, viewport_width: f32, max_x: f32, max_y: f32) -> Camera {
         let cam = Camera {
-            x: viewport_width as f64 / 2.0,
-            y: viewport_height as f64 / 2.0,
+            x: viewport_width / 2.0,
+            y: viewport_height / 2.0,
 
             left: 0.0,
-            right: viewport_width as f64,
+            right: viewport_width,
             top: 0.0,
-            bottom: viewport_height as f64,
+            bottom: viewport_height,
 
             horiz_scroll: 10.0,
             vert_scroll: 10.0,
@@ -48,46 +48,46 @@ impl Camera {
             viewport_height
         };
 
-        println!("Camera instantiated: {:#?}", cam);
+        // println!("Camera instantiated: {:#?}", cam);
         cam
     }
 
-    pub fn get_x(&self) -> f64 {
+    pub fn get_x(&self) -> f32 {
         self.x
     }
 
-    pub fn get_y(&self) -> f64 {
+    pub fn get_y(&self) -> f32 {
         self.y
     }
 
-    pub fn get_left(&self) -> f64 {
+    pub fn get_left(&self) -> f32 {
         self.left
     }
 
-    pub fn get_right(&self) -> f64 {
+    pub fn get_right(&self) -> f32 {
         self.right
     }
 
-    pub fn get_top(&self) -> f64 {
+    pub fn get_top(&self) -> f32 {
         self.top
     }
 
-    pub fn get_bottom(&self) -> f64 {
+    pub fn get_bottom(&self) -> f32 {
         self.bottom
     }
 
     fn position_updated(&mut self) {
-        self.left = self.x - self.viewport_width as f64 / 2.0;
-        self.right = self.x + self.viewport_width as f64 / 2.0;
-        self.top = self.y - self.viewport_height as f64 / 2.0;
-        self.bottom = self.y + self.viewport_height as f64 / 2.0;
+        self.left = self.x - self.viewport_width / 2.0;
+        self.right = self.x + self.viewport_width / 2.0;
+        self.top = self.y - self.viewport_height / 2.0;
+        self.bottom = self.y + self.viewport_height / 2.0;
     }
 
     pub fn move_left(&mut self) {
-        if (self.x - self.viewport_width as f64 / 2.0 - self.horiz_scroll) >= 0.0 {
+        if (self.x - self.viewport_width / 2.0 - self.horiz_scroll) >= 0.0 {
             self.x -= self.horiz_scroll;
         } else {
-            self.x = self.viewport_width as f64 / 2.0;
+            self.x = self.viewport_width / 2.0;
         }
 
         self.position_updated();
@@ -96,10 +96,10 @@ impl Camera {
     }
 
     pub fn move_right(&mut self) {
-        if (self.x + self.viewport_width as f64 / 2.0 + self.horiz_scroll) <= (self.max_x) {
+        if (self.x + self.viewport_width / 2.0 + self.horiz_scroll) <= (self.max_x) {
             self.x += self.horiz_scroll;
         } else {
-            self.x = self.max_x - self.viewport_width as f64 / 2.0;
+            self.x = self.max_x - self.viewport_width / 2.0;
         }
 
         self.position_updated();
@@ -108,10 +108,10 @@ impl Camera {
     }
 
     pub fn move_up(&mut self) {
-        if (self.y - self.viewport_height as f64 / 2.0 - self.vert_scroll) >= 0.0 {
+        if (self.y - self.viewport_height / 2.0 - self.vert_scroll) >= 0.0 {
             self.y -= self.vert_scroll;
         } else {
-            self.y = self.viewport_height as f64 / 2.0;
+            self.y = self.viewport_height / 2.0;
         }
 
         self.position_updated();
@@ -120,10 +120,10 @@ impl Camera {
     }
 
     pub fn move_down(&mut self) {
-        if (self.y + self.viewport_height as f64 / 2.0 + self.vert_scroll) <= self.max_y {
+        if (self.y + self.viewport_height / 2.0 + self.vert_scroll) <= self.max_y {
             self.y += self.vert_scroll;
         } else {
-            self.y = self.max_y - self.viewport_height as f64 / 2.0;
+            self.y = self.max_y - self.viewport_height / 2.0;
         }
 
         self.position_updated();
@@ -133,9 +133,9 @@ impl Camera {
 
     // fn update_simulated_dimensions(&mut self) {
     //     // Update the dimesions that this camera should see the world at given the current Z position
-    //     let z_pct: f64 = (self.z - self.min_z) / (self.max_z - self.min_z);
-    //     // self.ground_width = z_pct * self.viewport_width as f64;
-    //     // self.ground_height = z_pct * self.viewport_height as f64;
+    //     let z_pct: f32 = (self.z - self.min_z) / (self.max_z - self.min_z);
+    //     // self.ground_width = z_pct * self.viewport_width;
+    //     // self.ground_height = z_pct * self.viewport_height;
     // }
     //
     // pub fn zoom_in(&mut self) {
