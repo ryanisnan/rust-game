@@ -2,6 +2,7 @@ extern crate ggez;
 
 pub mod world;
 pub mod camera;
+pub mod assets;
 
 use ggez::conf;
 use ggez::event;
@@ -9,16 +10,18 @@ use ggez::{GameResult, Context};
 use ggez::graphics;
 use ggez::graphics::{Color, DrawMode, Point};
 use std::time::Duration;
+use assets::Loadable;
 
 
 struct MainState {
     world: world::World,
-    camera: camera::Camera
+    camera: camera::Camera,
+    image: graphics::Image,
 }
 
 impl MainState {
-    fn new(ctx: &mut Context, world: world::World, camera: camera::Camera) -> GameResult<MainState> {
-        let s = MainState { world, camera };
+    fn new(ctx: &mut Context, world: world::World, camera: camera::Camera, image: graphics::Image) -> GameResult<MainState> {
+        let s = MainState { world, camera, image };
         Ok(s)
     }
 }
@@ -31,6 +34,7 @@ impl event::EventHandler for MainState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         graphics::clear(ctx);
 
+
         let tiles = self.world.get_tiles(self.camera.get_left(), self.camera.get_right(), self.camera.get_top(), self.camera.get_bottom());
         let x_offset = self.camera.get_left() % self.world.tile_width;
         let y_offset = self.camera.get_top() % self.world.tile_height;
@@ -40,17 +44,18 @@ impl event::EventHandler for MainState {
             for (j, tile) in row.iter().enumerate() {
                 let j = j as f32;
 
-                graphics::set_color(ctx, Color::from(tile.get_color()))?;
-                graphics::rectangle(
-                    ctx,
-                    DrawMode::Fill,
-                    graphics::Rect {
-                        x: j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset,
-                        y: i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset,
-                        w: self.world.tile_width,
-                        h: self.world.tile_height
-                    }
-                )?;
+                graphics::draw(ctx, &self.image, graphics::Point::new(j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset, i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset), 0.0)?;
+                // graphics::set_color(ctx, Color::from(tile.get_color()))?;
+                // graphics::rectangle(
+                //     ctx,
+                //     DrawMode::Fill,
+                //     graphics::Rect {
+                //         x: j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset,
+                //         y: i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset,
+                //         w: self.world.tile_width,
+                //         h: self.world.tile_height
+                //     }
+                // )?;
             }
         }
         graphics::present(ctx);
@@ -88,29 +93,21 @@ fn main() {
     let mut world = world::World::generate_world_1();
     let mut cam = camera::Camera::new(800.0, 800.0, world.get_width(), world.get_height());
 
+    // let mut loader = AssetLoader::new();
+
+    // let asset1 = loader.load::<AssetType>(&mut ctx, "dragon1.png");
+
     let c = conf::Conf::new();
     let ctx = &mut Context::load_from_conf("super_simple", "ggez", c).unwrap();
-    let state = &mut MainState::new(ctx, world, cam).unwrap();
+    let image = graphics::Image::new(ctx, "/grass-1.png").unwrap();
+    let state = &mut MainState::new(ctx, world, cam, image).unwrap();
+
+    let asset_loader = assets::AssetLoader::new();
+    asset_loader.load::<ggez::graphics::Image>(ctx, "/grass-1.png");
+    // let asset1 = ggez::graphics::Image::load(ctx, "/grass-1.png");
+    // println!("{:?}", asset1);
+
+
     event::run(ctx, state).unwrap();
-    //
-    // while let Some(event) = window.next() {
-    //     match event.press_args() {
-    //         Some(piston_window::Button::Keyboard(piston_window::Key::Left)) => {
-    //
-    //         },
-    //         Some(piston_window::Button::Keyboard(piston_window::Key::Right)) => {
-    //             cam.move_right();
-    //         },
-    //         Some(piston_window::Button::Keyboard(piston_window::Key::Up)) => {
-    //             cam.move_up();
-    //         },
-    //         Some(piston_window::Button::Keyboard(piston_window::Key::Down)) => {
-    //             cam.move_down();
-    //         },
-    //         Some(_) => (),
-    //         None => ()
-    //     }
-    //
-    //
-    // }
+
 }
