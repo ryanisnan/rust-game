@@ -8,21 +8,21 @@ use ggez::conf;
 use ggez::event;
 use ggez::{GameResult, Context};
 use ggez::graphics;
-use ggez::graphics::{Color, DrawMode, Point};
+use ggez::graphics::{Image, DrawMode, Point};
 use std::time::Duration;
-use assets::Loadable;
-
+use assets::AssetLoader;
+use world::World;
+use camera::Camera;
 
 struct MainState {
     world: world::World,
     camera: camera::Camera,
-    image: graphics::Image,
+    asset_loader: assets::AssetLoader,
 }
 
 impl MainState {
-    fn new(ctx: &mut Context, world: world::World, camera: camera::Camera, image: graphics::Image) -> GameResult<MainState> {
-        let s = MainState { world, camera, image };
-        Ok(s)
+    fn new(world: World, camera: Camera, asset_loader: AssetLoader) -> GameResult<MainState> {
+        Ok(MainState { world, camera, asset_loader })
     }
 }
 
@@ -44,18 +44,7 @@ impl event::EventHandler for MainState {
             for (j, tile) in row.iter().enumerate() {
                 let j = j as f32;
 
-                graphics::draw(ctx, &self.image, graphics::Point::new(j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset, i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset), 0.0)?;
-                // graphics::set_color(ctx, Color::from(tile.get_color()))?;
-                // graphics::rectangle(
-                //     ctx,
-                //     DrawMode::Fill,
-                //     graphics::Rect {
-                //         x: j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset,
-                //         y: i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset,
-                //         w: self.world.tile_width,
-                //         h: self.world.tile_height
-                //     }
-                // )?;
+                graphics::draw(ctx, tile.get_image(ctx, &mut self.asset_loader), graphics::Point::new(j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset, i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset), 0.0)?;
             }
         }
         graphics::present(ctx);
@@ -92,21 +81,11 @@ impl event::EventHandler for MainState {
 fn main() {
     let mut world = world::World::generate_world_1();
     let mut cam = camera::Camera::new(800.0, 800.0, world.get_width(), world.get_height());
-
-    // let mut loader = AssetLoader::new();
-
-    // let asset1 = loader.load::<AssetType>(&mut ctx, "dragon1.png");
+    let mut asset_loader = assets::AssetLoader::new();
 
     let c = conf::Conf::new();
     let ctx = &mut Context::load_from_conf("super_simple", "ggez", c).unwrap();
-    let image = graphics::Image::new(ctx, "/grass-1.png").unwrap();
-    let state = &mut MainState::new(ctx, world, cam, image).unwrap();
-
-    let asset_loader = assets::AssetLoader::new();
-    asset_loader.load::<ggez::graphics::Image>(ctx, "/grass-1.png");
-    // let asset1 = ggez::graphics::Image::load(ctx, "/grass-1.png");
-    // println!("{:?}", asset1);
-
+    let state = &mut MainState::new(world, cam, asset_loader).unwrap();
 
     event::run(ctx, state).unwrap();
 

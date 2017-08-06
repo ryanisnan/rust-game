@@ -1,14 +1,14 @@
 extern crate ggez;
 
 use ggez::Context;
+use ggez::graphics::Image;
+use std::sync::Arc;
+use std::any::Any;
+use std::collections::HashMap;
+
 
 pub trait Loadable {
-    fn load(ctx: &mut Context, file_path: &str) -> Self;
-}
-
-#[derive(Debug)]
-pub enum AssetType {
-    Image(ggez::graphics::Image),
+    fn load(ctx: &mut Context, file_path: &str) -> Self where Self: Sized;
 }
 
 impl Loadable for ggez::graphics::Image {
@@ -19,19 +19,34 @@ impl Loadable for ggez::graphics::Image {
 }
 
 pub struct AssetLoader {
-    assets: Vec<Box<AssetType>>,
+    assets: HashMap<String, Box<Any>>,
 }
 
 impl AssetLoader {
+    /*
+        Loads assets and stores them in a hashmap with the Key being the path for the file,
+        and the Value is the asset content.
+    */
     pub fn new() -> Self {
         AssetLoader {
-            assets: Vec::<Box<AssetType>>::new()
+            assets: HashMap::new(),
         }
     }
 
-    pub fn load<T: Loadable>(&self, ctx: &mut Context, file_path: &str) {
+    pub fn load<T: Loadable + 'static>(&mut self, ctx: &mut Context, file_path: &str) -> Arc<T> {
         println!("AssetLoader: Loading an asset...");
 
-        self.assets.push(Box::new(T::load(ctx, file_path)));
+        let asset = self.assets.entry(file_path.into()).or_insert_with(|| Box::new(Arc::new(T::load(ctx, file_path))));
+
+        if !asset.is::<T>() {
+            println!("Warning: Loading file as different asset type");
+            *asset = Box::new(Arc::new(T::load(ctx, file_path)));
+        }
+
+        asset.downcast_ref::<Arc<T>>().unwrap().clone()
+    }
+
+    pub fn load_image(&mut self, ctx: &mut Context, path: &str) -> Arc<Image> {
+        self.load(ctx, path)
     }
 }

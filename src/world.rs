@@ -1,4 +1,9 @@
 extern crate rand;
+extern crate ggez;
+
+use assets::AssetLoader;
+use ggez::graphics::Image;
+use ggez::Context;
 
 
 #[derive(Debug)]
@@ -14,6 +19,21 @@ impl Tile {
             Tile::Grass => [0.0, 1.0, 0.0, 1.0],
             Tile::Water => [0.0, 0.0, 1.0, 1.0],
             Tile::Stone => [0.6, 0.6, 0.6, 1.0]
+        }
+    }
+
+    pub fn get_image(&self, ctx: &mut Context, asset_loader: &mut AssetLoader) -> &Image {
+        match *self {
+            Tile::Grass => {
+                let foo = asset_loader.load_image(ctx, "/grass-1.png");
+                *foo
+            },
+            Tile::Water => {
+                &asset_loader.load_image(ctx, "/water-1.png")
+            },
+            Tile::Stone => {
+                &asset_loader.load_image(ctx, "/grass-1.png")
+            }
         }
     }
 
@@ -125,8 +145,8 @@ impl World {
             name: String::from("World 1"),
             rows: 10,
             columns: 10,
-            tile_height: 100.0,
-            tile_width: 100.0,
+            tile_height: 64.0,
+            tile_width: 64.0,
             data: data,
         }
     }
