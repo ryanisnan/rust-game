@@ -5,58 +5,58 @@ use assets::AssetLoader;
 use ggez::graphics::Image;
 use ggez::Context;
 
+use std::collections::HashMap;
 
-#[derive(Debug)]
-pub enum Tile {
+
+enum TileType {
+    // Basic enum listing the various types of tiles within the world
     Grass,
-    Water,
-    Stone
+    Water
 }
 
-impl Tile {
-    pub fn get_color(&self) -> [f32; 4] {  // r, g, b, a
-        match *self {
-            Tile::Grass => [0.0, 1.0, 0.0, 1.0],
-            Tile::Water => [0.0, 0.0, 1.0, 1.0],
-            Tile::Stone => [0.6, 0.6, 0.6, 1.0]
-        }
-    }
+struct TileMeta {
+    // Defines data common across various types of tiles
+    // These instance will be referenced by other world tiles
+    image: &Image,
+    is_walkable: bool
+}
 
-    pub fn get_image(&self, ctx: &mut Context, asset_loader: &mut AssetLoader) -> &Image {
-        match *self {
-            Tile::Grass => {
-                let foo = asset_loader.load_image(ctx, "/grass-1.png");
-                *foo
-            },
-            Tile::Water => {
-                &asset_loader.load_image(ctx, "/water-1.png")
-            },
-            Tile::Stone => {
-                &asset_loader.load_image(ctx, "/grass-1.png")
-            }
-        }
-    }
-
-    pub fn is_walkable(&self) -> bool {
-        match *self {
-            Tile::Grass => true,
-            Tile::Water => false,
-            Tile::Stone => false,
-        }
-    }
+struct Tile {
+    // Represents a game tile in the world
+    meta: &TileMeta,
+    x: u32,
+    y: u32,
 }
 
 #[derive(Debug)]
 pub struct World {
     pub name: String,
+
     pub data: Vec<Vec<Tile>>,
     pub rows: u32,
     pub columns: u32,
     pub tile_height: f32,
     pub tile_width: f32,
+
+    assets: AssetLoader,
+    tile_types: HashMap<TileType, TileMeta>
 }
 
 impl World {
+    pub fn new(name: &String) -> Self {
+        // TODO: Implement me!
+    }
+
+    fn load_tile_meta(&mut self, ctx: &mut Context) {
+        // Populate TileMeta instances into the local TileMeta hashmap
+        self.tile_types.insert(TileType::Grass, TileMeta { image: self.assets.load_image(ctx, "/grass-1.png"), is_walkable: true });
+        self.tile_types.insert(TileType::Water, TileMeta { image: self.assets.load_image(ctx, "/water-3.png"), is_walkable: false });
+    }
+
+    pub fn new() -> Self {
+        return World {}
+    }
+
     pub fn get_width(&self) -> f32 {
         self.columns as f32 * self.tile_width
     }
@@ -94,32 +94,10 @@ impl World {
 
         tmp_rows
     }
+}
 
-    pub fn generate_random_world(name: String, rows: u32, columns: u32) -> World {
-        let mut data: Vec<Vec<Tile>> = Vec::new();
-        for i in 0..rows {
-            let mut row: Vec<Tile> = Vec::new();
-            for j in 0..columns {
-                let x = rand::random::<f32>();
-                if x >= 0.25 {
-                    row.push(Tile::Grass);
-                } else if x >= 0.05 {
-                    row.push(Tile::Water);
-                } else {
-                    row.push(Tile::Stone);
-                }
-            }
-            data.push(row);
-        }
-        World {
-            name,
-            data,
-            rows,
-            columns,
-            tile_height: 50.0,
-            tile_width: 50.0,
-        }
-    }
+impl World {
+
 
     pub fn generate_world_1() -> World {
         let mut data: Vec<Vec<Tile>> = Vec::new();
@@ -134,12 +112,6 @@ impl World {
         data.push(vec![Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Stone]);
         data.push(vec![Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Stone]);
         data.push(vec![Tile::Grass, Tile::Grass, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone]);
-
-        data.push(vec![
-            Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass
-        ]);
-
-
 
         World {
             name: String::from("World 1"),
