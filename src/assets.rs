@@ -33,7 +33,7 @@ impl AssetLoader {
         }
     }
 
-    pub fn load<T: Loadable + 'static>(&mut self, ctx: &mut Context, file_path: &str) -> Arc<T> {
+    pub fn load<T: Loadable + 'static>(&mut self, ctx: &mut Context, file_path: &str) -> &Arc<T> {
         println!("AssetLoader: Loading an asset...");
 
         let asset = self.assets.entry(file_path.into()).or_insert_with(|| Box::new(Arc::new(T::load(ctx, file_path))));
@@ -43,10 +43,10 @@ impl AssetLoader {
             *asset = Box::new(Arc::new(T::load(ctx, file_path)));
         }
 
-        asset.downcast_ref::<Arc<T>>().unwrap().clone()
+        &asset.downcast_ref::<Arc<T>>().unwrap().clone()
     }
 
-    pub fn load_image(&mut self, ctx: &mut Context, path: &str) -> Arc<Image> {
-        self.load(ctx, path)
+    pub fn load_image(&mut self, ctx: &mut Context, path: &str) -> &Arc<Image> {
+        &self.load(ctx, path)
     }
 }
