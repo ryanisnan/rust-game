@@ -6,26 +6,33 @@ use ggez::graphics::Image;
 use ggez::Context;
 
 use std::collections::HashMap;
+use std::rc::Rc;
+use std::hash::Hash;
+
+pub const TILE_WIDTH: u32 = 64;
+pub const TILE_HEIGHT: u32 = 64;
 
 
+#[derive(Debug, PartialEq, Eq, Hash)]
 enum TileType {
     // Basic enum listing the various types of tiles within the world
     Grass,
     Water
 }
 
-struct TileMeta {
-    // Defines data common across various types of tiles
-    // These instance will be referenced by other world tiles
-    image: &Image,
-    is_walkable: bool
+#[derive(Debug)]
+pub struct TileMeta {
+    // Defines data common across various types of tiles (Flyweight Pattern)
+    pub image: Rc<Image>,
+    pub is_walkable: bool
 }
 
-struct Tile {
+#[derive(Debug)]
+pub struct Tile {
     // Represents a game tile in the world
-    meta: &TileMeta,
-    x: u32,
-    y: u32,
+    pub meta: Rc<TileMeta>,
+    pub x: u32,
+    pub y: u32,
 }
 
 #[derive(Debug)]
@@ -35,41 +42,48 @@ pub struct World {
     pub data: Vec<Vec<Tile>>,
     pub rows: u32,
     pub columns: u32,
-    pub tile_height: f32,
-    pub tile_width: f32,
 
     assets: AssetLoader,
-    tile_types: HashMap<TileType, TileMeta>
+    tile_types: HashMap<TileType, Rc<TileMeta>>
 }
 
 impl World {
-    pub fn new(name: &String) -> Self {
-        // TODO: Implement me!
+    pub fn new(name: String, ctx: &mut Context) -> Self {
+        let mut w = World {
+            name: name,
+            data: Vec::new(),
+            rows: 8,
+            columns: 10,
+            assets: AssetLoader::new(),
+            tile_types: HashMap::new(),
+        };
+
+        w.load_tile_meta(ctx);
+
+        w
     }
 
     fn load_tile_meta(&mut self, ctx: &mut Context) {
-        // Populate TileMeta instances into the local TileMeta hashmap
-        self.tile_types.insert(TileType::Grass, TileMeta { image: self.assets.load_image(ctx, "/grass-1.png"), is_walkable: true });
-        self.tile_types.insert(TileType::Water, TileMeta { image: self.assets.load_image(ctx, "/water-3.png"), is_walkable: false });
+        // Load self.tile_types with the appropriate data
+        self.tile_types.insert(TileType::Grass, Rc::new(TileMeta { image: self.assets.load_image(ctx, "/grass-1.png"), is_walkable: true }));
+        self.tile_types.insert(TileType::Water, Rc::new(TileMeta { image: self.assets.load_image(ctx, "/water-3.png"), is_walkable: false }));
     }
 
-    pub fn new() -> Self {
-        return World {}
+    pub fn get_width(&self) -> u32 {
+        // Get the width of the world in pixels
+        self.columns * TILE_WIDTH
     }
 
-    pub fn get_width(&self) -> f32 {
-        self.columns as f32 * self.tile_width
-    }
-
-    pub fn get_height(&self) -> f32 {
-        self.rows as f32 * self.tile_height
+    pub fn get_height(&self) -> u32 {
+        // Get the height of the world in pixels
+        self.rows * TILE_HEIGHT
     }
 
     pub fn get_tiles(&self, left: f32, right: f32, top: f32, bottom: f32) -> Vec<Vec<&Tile>> {
-        let idx_left = (left / self.tile_width).floor() as usize;
-        let mut idx_right = (right / self.tile_width).floor() as usize;
-        let idx_top = (top / self.tile_height).floor() as usize;
-        let mut idx_bottom = (bottom / self.tile_height).floor() as usize;
+        let idx_left = (left / TILE_WIDTH as f32).floor() as usize;
+        let mut idx_right = (right / TILE_WIDTH as f32).floor() as usize;
+        let idx_top = (top / TILE_HEIGHT as f32).floor() as usize;
+        let mut idx_bottom = (bottom / TILE_HEIGHT as f32).floor() as usize;
 
         if idx_right >= self.columns as usize {
             idx_right = (self.columns - 1) as usize;
@@ -94,32 +108,121 @@ impl World {
 
         tmp_rows
     }
-}
 
-impl World {
+    pub fn load_world_1(&mut self) {
+        let g = self.tile_types[&TileType::Grass].clone();
+        let w = self.tile_types[&TileType::Water].clone();
 
+        // Row 1
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 0},
+            Tile { meta: g.clone(), x: 1, y: 0},
+            Tile { meta: g.clone(), x: 2, y: 0},
+            Tile { meta: g.clone(), x: 3, y: 0},
+            Tile { meta: g.clone(), x: 4, y: 0},
+            Tile { meta: g.clone(), x: 5, y: 0},
+            Tile { meta: g.clone(), x: 6, y: 0},
+            Tile { meta: g.clone(), x: 7, y: 0},
+            Tile { meta: g.clone(), x: 8, y: 0},
+            Tile { meta: g.clone(), x: 9, y: 0},
+        ]);
 
-    pub fn generate_world_1() -> World {
-        let mut data: Vec<Vec<Tile>> = Vec::new();
+        // Row 2
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 1},
+            Tile { meta: g.clone(), x: 1, y: 1},
+            Tile { meta: g.clone(), x: 2, y: 1},
+            Tile { meta: g.clone(), x: 3, y: 1},
+            Tile { meta: g.clone(), x: 4, y: 1},
+            Tile { meta: g.clone(), x: 5, y: 1},
+            Tile { meta: g.clone(), x: 6, y: 1},
+            Tile { meta: g.clone(), x: 7, y: 1},
+            Tile { meta: g.clone(), x: 8, y: 1},
+            Tile { meta: g.clone(), x: 9, y: 1},
+        ]);
 
-        data.push(vec![Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone]);
-        data.push(vec![Tile::Stone, Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass]);
-        data.push(vec![Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass]);
-        data.push(vec![Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Water, Tile::Water, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass]);
-        data.push(vec![Tile::Stone, Tile::Grass, Tile::Water, Tile::Water, Tile::Water, Tile::Water, Tile::Water, Tile::Water, Tile::Grass, Tile::Grass]);
-        data.push(vec![Tile::Stone, Tile::Grass, Tile::Water, Tile::Water, Tile::Water, Tile::Water, Tile::Water, Tile::Water, Tile::Grass, Tile::Grass]);
-        data.push(vec![Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Water, Tile::Water, Tile::Water, Tile::Water, Tile::Grass, Tile::Grass]);
-        data.push(vec![Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Stone]);
-        data.push(vec![Tile::Stone, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Grass, Tile::Stone]);
-        data.push(vec![Tile::Grass, Tile::Grass, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone, Tile::Stone]);
+        // Row 3
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 2},
+            Tile { meta: g.clone(), x: 1, y: 2},
+            Tile { meta: g.clone(), x: 2, y: 2},
+            Tile { meta: w.clone(), x: 3, y: 2},
+            Tile { meta: w.clone(), x: 4, y: 2},
+            Tile { meta: w.clone(), x: 5, y: 2},
+            Tile { meta: w.clone(), x: 6, y: 2},
+            Tile { meta: g.clone(), x: 7, y: 2},
+            Tile { meta: g.clone(), x: 8, y: 2},
+            Tile { meta: g.clone(), x: 9, y: 2},
+        ]);
 
-        World {
-            name: String::from("World 1"),
-            rows: 10,
-            columns: 10,
-            tile_height: 64.0,
-            tile_width: 64.0,
-            data: data,
-        }
+        // Row 4
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 3},
+            Tile { meta: g.clone(), x: 1, y: 3},
+            Tile { meta: g.clone(), x: 2, y: 3},
+            Tile { meta: w.clone(), x: 3, y: 3},
+            Tile { meta: w.clone(), x: 4, y: 3},
+            Tile { meta: w.clone(), x: 5, y: 3},
+            Tile { meta: w.clone(), x: 6, y: 3},
+            Tile { meta: g.clone(), x: 7, y: 3},
+            Tile { meta: g.clone(), x: 8, y: 3},
+            Tile { meta: g.clone(), x: 9, y: 3},
+        ]);
+
+        // Row 5
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 4},
+            Tile { meta: g.clone(), x: 1, y: 4},
+            Tile { meta: g.clone(), x: 2, y: 4},
+            Tile { meta: w.clone(), x: 3, y: 4},
+            Tile { meta: w.clone(), x: 4, y: 4},
+            Tile { meta: w.clone(), x: 5, y: 4},
+            Tile { meta: w.clone(), x: 6, y: 4},
+            Tile { meta: g.clone(), x: 7, y: 4},
+            Tile { meta: g.clone(), x: 8, y: 4},
+            Tile { meta: g.clone(), x: 9, y: 4},
+        ]);
+
+        // Row 6
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 5},
+            Tile { meta: g.clone(), x: 1, y: 5},
+            Tile { meta: g.clone(), x: 2, y: 5},
+            Tile { meta: g.clone(), x: 3, y: 5},
+            Tile { meta: g.clone(), x: 4, y: 5},
+            Tile { meta: g.clone(), x: 5, y: 5},
+            Tile { meta: g.clone(), x: 6, y: 5},
+            Tile { meta: g.clone(), x: 7, y: 5},
+            Tile { meta: g.clone(), x: 8, y: 5},
+            Tile { meta: g.clone(), x: 9, y: 5},
+        ]);
+
+        // Row 7
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 6},
+            Tile { meta: g.clone(), x: 1, y: 6},
+            Tile { meta: g.clone(), x: 2, y: 6},
+            Tile { meta: g.clone(), x: 3, y: 6},
+            Tile { meta: g.clone(), x: 4, y: 6},
+            Tile { meta: g.clone(), x: 5, y: 6},
+            Tile { meta: g.clone(), x: 6, y: 6},
+            Tile { meta: g.clone(), x: 7, y: 6},
+            Tile { meta: g.clone(), x: 8, y: 6},
+            Tile { meta: g.clone(), x: 9, y: 6},
+        ]);
+
+        // Row 8
+        self.data.push(vec![
+            Tile { meta: g.clone(), x: 0, y: 7},
+            Tile { meta: g.clone(), x: 1, y: 7},
+            Tile { meta: g.clone(), x: 2, y: 7},
+            Tile { meta: g.clone(), x: 3, y: 7},
+            Tile { meta: g.clone(), x: 4, y: 7},
+            Tile { meta: g.clone(), x: 5, y: 7},
+            Tile { meta: g.clone(), x: 6, y: 7},
+            Tile { meta: g.clone(), x: 7, y: 7},
+            Tile { meta: g.clone(), x: 8, y: 7},
+            Tile { meta: g.clone(), x: 9, y: 7},
+        ]);
     }
 }

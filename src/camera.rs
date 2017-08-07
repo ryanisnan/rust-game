@@ -21,28 +21,28 @@ pub struct Camera {
     max_y: f32,
 
     // Viewport Information
-    viewport_width: f32,
-    viewport_height: f32,
+    viewport_width: u32,
+    viewport_height: u32,
 }
 
 impl Camera {
-    pub fn new(viewport_height: f32, viewport_width: f32, max_x: f32, max_y: f32) -> Camera {
+    pub fn new(viewport_height: u32, viewport_width: u32, max_x: u32, max_y: u32) -> Camera {
         let cam = Camera {
-            x: viewport_width / 2.0,
-            y: viewport_height / 2.0,
+            x: viewport_width as f32 / 2.0,
+            y: viewport_height as f32 / 2.0,
 
             left: 0.0,
-            right: viewport_width,
+            right: viewport_width as f32,
             top: 0.0,
-            bottom: viewport_height,
+            bottom: viewport_height as f32,
 
             horiz_scroll: 10.0,
             vert_scroll: 10.0,
 
             min_x: 0.0,
-            max_x,
+            max_x: max_x as f32,
             min_y: 0.0,
-            max_y,
+            max_y: max_y as f32,
 
             viewport_width,
             viewport_height
@@ -77,17 +77,17 @@ impl Camera {
     }
 
     fn position_updated(&mut self) {
-        self.left = self.x - self.viewport_width / 2.0;
-        self.right = self.x + self.viewport_width / 2.0;
-        self.top = self.y - self.viewport_height / 2.0;
-        self.bottom = self.y + self.viewport_height / 2.0;
+        self.left = self.x - self.viewport_width as f32 / 2.0;
+        self.right = self.x + self.viewport_width as f32 / 2.0;
+        self.top = self.y - self.viewport_height as f32 / 2.0;
+        self.bottom = self.y + self.viewport_height as f32 / 2.0;
     }
 
     pub fn move_left(&mut self) {
-        if (self.x - self.viewport_width / 2.0 - self.horiz_scroll) >= 0.0 {
+        if (self.x - self.viewport_width as f32 / 2.0 - self.horiz_scroll) >= 0.0 {
             self.x -= self.horiz_scroll;
         } else {
-            self.x = self.viewport_width / 2.0;
+            self.x = self.viewport_width as f32 / 2.0;
         }
 
         self.position_updated();
@@ -96,10 +96,10 @@ impl Camera {
     }
 
     pub fn move_right(&mut self) {
-        if (self.x + self.viewport_width / 2.0 + self.horiz_scroll) <= (self.max_x) {
+        if (self.x + self.viewport_width as f32 / 2.0 + self.horiz_scroll) <= (self.max_x) {
             self.x += self.horiz_scroll;
         } else {
-            self.x = self.max_x - self.viewport_width / 2.0;
+            self.x = self.max_x - self.viewport_width as f32 / 2.0;
         }
 
         self.position_updated();
@@ -108,10 +108,10 @@ impl Camera {
     }
 
     pub fn move_up(&mut self) {
-        if (self.y - self.viewport_height / 2.0 - self.vert_scroll) >= 0.0 {
+        if (self.y - self.viewport_height as f32 / 2.0 - self.vert_scroll) >= 0.0 {
             self.y -= self.vert_scroll;
         } else {
-            self.y = self.viewport_height / 2.0;
+            self.y = self.viewport_height as f32 / 2.0;
         }
 
         self.position_updated();
@@ -120,10 +120,10 @@ impl Camera {
     }
 
     pub fn move_down(&mut self) {
-        if (self.y + self.viewport_height / 2.0 + self.vert_scroll) <= self.max_y {
+        if (self.y + self.viewport_height as f32 / 2.0 + self.vert_scroll) <= self.max_y {
             self.y += self.vert_scroll;
         } else {
-            self.y = self.max_y - self.viewport_height / 2.0;
+            self.y = self.max_y - self.viewport_height as f32 / 2.0;
         }
 
         self.position_updated();

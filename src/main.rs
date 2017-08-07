@@ -4,7 +4,7 @@ pub mod world;
 pub mod camera;
 pub mod assets;
 
-use ggez::conf;
+use ggez::conf::Conf;
 use ggez::event;
 use ggez::{GameResult, Context};
 use ggez::graphics;
@@ -17,15 +17,13 @@ use camera::Camera;
 struct MainState {
     world: World,
     camera: Camera,
-    asset_loader: AssetLoader,
 }
 
 impl MainState {
-    fn new(world: World, camera: Camera, asset_loader: AssetLoader) -> GameResult<MainState> {
+    fn new(world: World, camera: Camera) -> GameResult<MainState> {
         Ok(MainState {
             world,
             camera,
-            asset_loader
         })
     }
 }
@@ -40,16 +38,15 @@ impl event::EventHandler for MainState {
 
 
         let tiles = self.world.get_tiles(self.camera.get_left(), self.camera.get_right(), self.camera.get_top(), self.camera.get_bottom());
-        let x_offset = self.camera.get_left() % self.world.tile_width;
-        let y_offset = self.camera.get_top() % self.world.tile_height;
+        let x_offset = self.camera.get_left() % world::TILE_WIDTH as f32;
+        let y_offset = self.camera.get_top() % world::TILE_HEIGHT as f32;
 
         for (i, row) in tiles.iter().enumerate() {
             let i = i as f32;
             for (j, tile) in row.iter().enumerate() {
                 let j = j as f32;
 
-                let img = tile.get_image(ctx, &mut self.asset_loader);
-                graphics::draw(ctx, img, graphics::Point::new(j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset, i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset), 0.0)?;
+                graphics::draw(ctx, &*tile.meta.image, graphics::Point::new(j * world::TILE_WIDTH as f32 + world::TILE_WIDTH as f32 / 2.0 - x_offset, i * world::TILE_HEIGHT as f32 + world::TILE_HEIGHT as f32 / 2.0 - y_offset), 0.0)?;
             }
         }
         graphics::present(ctx);
@@ -84,14 +81,21 @@ impl event::EventHandler for MainState {
 
 
 fn main() {
-    let mut world = world::World::generate_world_1();
-    let mut cam = camera::Camera::new(800.0, 800.0, world.get_width(), world.get_height());
-    let mut asset_loader = assets::AssetLoader::new();
-
-    let c = conf::Conf::new();
+    let c = Conf {
+        window_title: String::from("World's best game"),
+        window_icon: String::from(""),
+        window_height: 800,
+        window_width: 800,
+        vsync: false,
+        resizable: false
+    };
     let ctx = &mut Context::load_from_conf("super_simple", "ggez", c).unwrap();
-    let state = &mut MainState::new(world, cam, asset_loader).unwrap();
 
+    let mut world = world::World::new(String::from("New game"), ctx);
+    world.load_world_1();
+
+    let cam = camera::Camera::new(800, 800, world.get_width(), world.get_height());
+    let state = &mut MainState::new(world, cam).unwrap();
     event::run(ctx, state).unwrap();
 
 }
