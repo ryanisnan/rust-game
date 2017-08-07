@@ -15,14 +15,18 @@ use world::World;
 use camera::Camera;
 
 struct MainState {
-    world: world::World,
-    camera: camera::Camera,
-    asset_loader: assets::AssetLoader,
+    world: World,
+    camera: Camera,
+    asset_loader: AssetLoader,
 }
 
 impl MainState {
     fn new(world: World, camera: Camera, asset_loader: AssetLoader) -> GameResult<MainState> {
-        Ok(MainState { world, camera, asset_loader })
+        Ok(MainState {
+            world,
+            camera,
+            asset_loader
+        })
     }
 }
 
@@ -44,7 +48,8 @@ impl event::EventHandler for MainState {
             for (j, tile) in row.iter().enumerate() {
                 let j = j as f32;
 
-                graphics::draw(ctx, tile.get_image(ctx, &mut self.asset_loader), graphics::Point::new(j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset, i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset), 0.0)?;
+                let img = tile.get_image(ctx, &mut self.asset_loader);
+                graphics::draw(ctx, img, graphics::Point::new(j * self.world.tile_width + self.world.tile_width / 2.0 - x_offset, i * self.world.tile_height + self.world.tile_height / 2.0 - y_offset), 0.0)?;
             }
         }
         graphics::present(ctx);
