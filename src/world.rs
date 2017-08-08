@@ -36,6 +36,29 @@ pub struct Tile {
 }
 
 #[derive(Debug)]
+pub struct TileLibrary {
+    // Represents a library of different tile types
+    tiles: HashMap<TileType, Rc<TileMeta>>
+}
+
+impl TileLibrary {
+    pub fn new(ctx: &mut Context, asset_loader: &mut AssetLoader) -> Self {
+        let mut lib = TileLibrary {
+            tiles: HashMap::new(),
+        };
+
+        lib.populate(ctx, asset_loader);
+
+        lib
+    }
+
+    fn populate(&mut self, ctx: &mut Context, asset_loader: &mut AssetLoader) {
+        self.tiles.insert(TileType::Grass, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-1.png"), is_walkable: true }));
+        self.tiles.insert(TileType::Water, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/water-3.png"), is_walkable: false }));
+    }
+}
+
+#[derive(Debug)]
 pub struct World {
     pub name: String,
 
@@ -44,35 +67,26 @@ pub struct World {
     pub columns: u32,
 
     asset_loader: AssetLoader,
-    tile_types: HashMap<TileType, Rc<TileMeta>>,
-    decorations: DecorationLibrary
+    tile_library: TileLibrary,
+    decorations_library: DecorationLibrary
 }
 
 impl World {
     pub fn new(name: String, ctx: &mut Context) -> Self {
         let mut asset_loader = AssetLoader::new();
 
-        let mut decorations = DecorationLibrary::new(ctx, &mut asset_loader);
+        let tile_library = TileLibrary::new(ctx, &mut asset_loader);
+        let decorations_library = DecorationLibrary::new(ctx, &mut asset_loader);
 
-        let mut w = World {
+        World {
             name: name,
             data: Vec::new(),
             rows: 8,
             columns: 10,
             asset_loader: asset_loader,
-            tile_types: HashMap::new(),
-            decorations: decorations,
-        };
-
-        w.load_tile_meta(ctx);
-
-        w
-    }
-
-    fn load_tile_meta(&mut self, ctx: &mut Context) {
-        // Load self.tile_types with the appropriate data
-        self.tile_types.insert(TileType::Grass, Rc::new(TileMeta { image: self.asset_loader.load_image(ctx, "/grass-1.png"), is_walkable: true }));
-        self.tile_types.insert(TileType::Water, Rc::new(TileMeta { image: self.asset_loader.load_image(ctx, "/water-3.png"), is_walkable: false }));
+            tile_library: tile_library,
+            decorations_library: decorations_library,
+        }
     }
 
     pub fn get_width(&self) -> u32 {
@@ -116,8 +130,8 @@ impl World {
     }
 
     pub fn load_world_1(&mut self) {
-        let g = self.tile_types[&TileType::Grass].clone();
-        let w = self.tile_types[&TileType::Water].clone();
+        let g = self.tile_library.tiles[&TileType::Grass].clone();
+        let w = self.tile_library.tiles[&TileType::Water].clone();
 
         // Row 1
         self.data.push(vec![
