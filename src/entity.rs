@@ -12,13 +12,13 @@ pub enum DecorationType {
 }
 
 #[derive(Debug)]
-pub struct Decoration {
+pub struct DecorationFlyweight {
     image: Rc<Image>
 }
 
 #[derive(Debug)]
 pub struct DecorationLibrary {
-    pub decorations: HashMap<DecorationType, Rc<Decoration>>
+    pub decorations: HashMap<DecorationType, Rc<DecorationFlyweight>>
 }
 
 impl DecorationLibrary {
@@ -33,6 +33,6 @@ impl DecorationLibrary {
     }
 
     fn load_assets(&mut self, ctx: &mut Context, asset_loader: &mut AssetLoader) {
-        self.decorations.insert(DecorationType::Bush1x1, Rc::new(Decoration { image: asset_loader.load_image(ctx, "/bush-1.png")}));
+        self.decorations.insert(DecorationType::Bush1x1, Rc::new(DecorationFlyweight { image: asset_loader.load_image(ctx, "/bush-1.png")}));
     }
 }
