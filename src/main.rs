@@ -48,7 +48,14 @@ impl event::EventHandler for MainState {
             for (j, tile) in row.iter().enumerate() {
                 let j = j as f32;
 
-                graphics::draw(ctx, &*tile.meta.image, graphics::Point::new(j * world::TILE_WIDTH as f32 + world::TILE_WIDTH as f32 / 2.0 - x_offset, i * world::TILE_HEIGHT as f32 + world::TILE_HEIGHT as f32 / 2.0 - y_offset), 0.0)?;
+                let p = graphics::Point::new(j * world::TILE_WIDTH as f32 + world::TILE_WIDTH as f32 / 2.0 - x_offset, i * world::TILE_HEIGHT as f32 + world::TILE_HEIGHT as f32 / 2.0 - y_offset);
+                graphics::draw(ctx, &*tile.meta.image, p, 0.0)?;
+
+                for decoration in tile.decorations.iter() {
+                    // println!("{:?}", decoration);
+                    graphics::draw(ctx, &*decoration[0].flyweight.image, p, 0.0);
+                }
+
             }
         }
         graphics::present(ctx);

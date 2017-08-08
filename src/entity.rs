@@ -13,7 +13,7 @@ pub enum DecorationType {
 
 #[derive(Debug)]
 pub struct DecorationFlyweight {
-    image: Rc<Image>
+    pub image: Rc<Image>
 }
 
 #[derive(Debug)]

@@ -130,7 +130,7 @@ impl World {
 
     fn generate_grass_tile(&self, decorations: Option<Vec<Decoration>>) -> Tile {
         let g = self.tile_library.tiles[&TileType::Grass].clone();
-        Tile { meta: g, decorations: None}
+        Tile { meta: g, decorations: decorations}
     }
 
     fn generate_water_tile(&self) -> Tile {
@@ -174,6 +174,7 @@ impl World {
         let b1 = Decoration {
             flyweight: b,
         };
+        println!("Bush? {:?}", b1);
 
         let r3 = vec![
             self.generate_grass_tile(None),
