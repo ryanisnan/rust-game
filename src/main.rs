@@ -3,6 +3,7 @@ extern crate ggez;
 pub mod world;
 pub mod camera;
 pub mod assets;
+pub mod entity;
 
 use ggez::conf::Conf;
 use ggez::event;

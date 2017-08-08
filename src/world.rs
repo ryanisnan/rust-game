@@ -4,6 +4,7 @@ extern crate ggez;
 use assets::AssetLoader;
 use ggez::graphics::Image;
 use ggez::Context;
+use entity::DecorationLibrary;
 
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -42,19 +43,25 @@ pub struct World {
     pub rows: u32,
     pub columns: u32,
 
-    assets: AssetLoader,
-    tile_types: HashMap<TileType, Rc<TileMeta>>
+    asset_loader: AssetLoader,
+    tile_types: HashMap<TileType, Rc<TileMeta>>,
+    decorations: DecorationLibrary
 }
 
 impl World {
     pub fn new(name: String, ctx: &mut Context) -> Self {
+        let mut asset_loader = AssetLoader::new();
+
+        let mut decorations = DecorationLibrary::new(ctx, &mut asset_loader);
+
         let mut w = World {
             name: name,
             data: Vec::new(),
             rows: 8,
             columns: 10,
-            assets: AssetLoader::new(),
+            asset_loader: asset_loader,
             tile_types: HashMap::new(),
+            decorations: decorations,
         };
 
         w.load_tile_meta(ctx);
@@ -64,8 +71,8 @@ impl World {
 
     fn load_tile_meta(&mut self, ctx: &mut Context) {
         // Load self.tile_types with the appropriate data
-        self.tile_types.insert(TileType::Grass, Rc::new(TileMeta { image: self.assets.load_image(ctx, "/grass-1.png"), is_walkable: true }));
-        self.tile_types.insert(TileType::Water, Rc::new(TileMeta { image: self.assets.load_image(ctx, "/water-3.png"), is_walkable: false }));
+        self.tile_types.insert(TileType::Grass, Rc::new(TileMeta { image: self.asset_loader.load_image(ctx, "/grass-1.png"), is_walkable: true }));
+        self.tile_types.insert(TileType::Water, Rc::new(TileMeta { image: self.asset_loader.load_image(ctx, "/water-3.png"), is_walkable: false }));
     }
 
     pub fn get_width(&self) -> u32 {
