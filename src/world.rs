@@ -133,9 +133,9 @@ impl World {
         Tile { meta: g, decorations: decorations}
     }
 
-    fn generate_water_tile(&self) -> Tile {
+    fn generate_water_tile(&self, decorations: Option<Vec<Decoration>>) -> Tile {
         let w = self.tile_library.tiles[&TileType::Water].clone();
-        Tile { meta: w, decorations: None}
+        Tile { meta: w, decorations: decorations}
     }
 
     pub fn load_world_1(&mut self) {
@@ -195,10 +195,10 @@ impl World {
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
@@ -210,10 +210,10 @@ impl World {
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
@@ -225,10 +225,10 @@ impl World {
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
@@ -240,10 +240,10 @@ impl World {
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
-            self.generate_water_tile(),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
+            self.generate_water_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
             self.generate_grass_tile(None),
