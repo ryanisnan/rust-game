@@ -36,3 +36,8 @@ impl DecorationLibrary {
         self.decorations.insert(DecorationType::Bush1x1, Rc::new(DecorationFlyweight { image: asset_loader.load_image(ctx, "/bush-1.png")}));
     }
 }
+
+#[derive(Debug)]
+pub struct Decoration {
+    pub flyweight: Rc<DecorationFlyweight>,
+}

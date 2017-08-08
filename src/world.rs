@@ -5,6 +5,7 @@ use assets::AssetLoader;
 use ggez::graphics::Image;
 use ggez::Context;
 use entity::DecorationLibrary;
+use entity::Decoration;
 
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -31,8 +32,7 @@ pub struct TileMeta {
 pub struct Tile {
     // Represents a game tile in the world
     pub meta: Rc<TileMeta>,
-    pub x: u32,
-    pub y: u32,
+    pub decorations: Option<Vec<Decoration>>,
 }
 
 #[derive(Debug)]
@@ -81,7 +81,7 @@ impl World {
         World {
             name: name,
             data: Vec::new(),
-            rows: 8,
+            rows: 10,
             columns: 10,
             asset_loader: asset_loader,
             tile_library: tile_library,
@@ -129,120 +129,165 @@ impl World {
         tmp_rows
     }
 
-    pub fn load_world_1(&mut self) {
+    fn generate_grass_tile(&self) -> Tile {
         let g = self.tile_library.tiles[&TileType::Grass].clone();
-        let w = self.tile_library.tiles[&TileType::Water].clone();
+        Tile { meta: g, decorations: None}
+    }
 
+    fn generate_water_tile(&self) -> Tile {
+        let w = self.tile_library.tiles[&TileType::Water].clone();
+        Tile { meta: w, decorations: None}
+    }
+
+    pub fn load_world_1(&mut self) {
         // Row 1
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 0},
-            Tile { meta: g.clone(), x: 1, y: 0},
-            Tile { meta: g.clone(), x: 2, y: 0},
-            Tile { meta: g.clone(), x: 3, y: 0},
-            Tile { meta: g.clone(), x: 4, y: 0},
-            Tile { meta: g.clone(), x: 5, y: 0},
-            Tile { meta: g.clone(), x: 6, y: 0},
-            Tile { meta: g.clone(), x: 7, y: 0},
-            Tile { meta: g.clone(), x: 8, y: 0},
-            Tile { meta: g.clone(), x: 9, y: 0},
-        ]);
+        let r1 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r1);
 
         // Row 2
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 1},
-            Tile { meta: g.clone(), x: 1, y: 1},
-            Tile { meta: g.clone(), x: 2, y: 1},
-            Tile { meta: g.clone(), x: 3, y: 1},
-            Tile { meta: g.clone(), x: 4, y: 1},
-            Tile { meta: g.clone(), x: 5, y: 1},
-            Tile { meta: g.clone(), x: 6, y: 1},
-            Tile { meta: g.clone(), x: 7, y: 1},
-            Tile { meta: g.clone(), x: 8, y: 1},
-            Tile { meta: g.clone(), x: 9, y: 1},
-        ]);
+        let r2 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r2);
 
         // Row 3
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 2},
-            Tile { meta: g.clone(), x: 1, y: 2},
-            Tile { meta: g.clone(), x: 2, y: 2},
-            Tile { meta: w.clone(), x: 3, y: 2},
-            Tile { meta: w.clone(), x: 4, y: 2},
-            Tile { meta: w.clone(), x: 5, y: 2},
-            Tile { meta: w.clone(), x: 6, y: 2},
-            Tile { meta: g.clone(), x: 7, y: 2},
-            Tile { meta: g.clone(), x: 8, y: 2},
-            Tile { meta: g.clone(), x: 9, y: 2},
-        ]);
+        let r3 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r3);
 
         // Row 4
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 3},
-            Tile { meta: g.clone(), x: 1, y: 3},
-            Tile { meta: g.clone(), x: 2, y: 3},
-            Tile { meta: w.clone(), x: 3, y: 3},
-            Tile { meta: w.clone(), x: 4, y: 3},
-            Tile { meta: w.clone(), x: 5, y: 3},
-            Tile { meta: w.clone(), x: 6, y: 3},
-            Tile { meta: g.clone(), x: 7, y: 3},
-            Tile { meta: g.clone(), x: 8, y: 3},
-            Tile { meta: g.clone(), x: 9, y: 3},
-        ]);
+        let r4 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r4);
 
         // Row 5
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 4},
-            Tile { meta: g.clone(), x: 1, y: 4},
-            Tile { meta: g.clone(), x: 2, y: 4},
-            Tile { meta: w.clone(), x: 3, y: 4},
-            Tile { meta: w.clone(), x: 4, y: 4},
-            Tile { meta: w.clone(), x: 5, y: 4},
-            Tile { meta: w.clone(), x: 6, y: 4},
-            Tile { meta: g.clone(), x: 7, y: 4},
-            Tile { meta: g.clone(), x: 8, y: 4},
-            Tile { meta: g.clone(), x: 9, y: 4},
-        ]);
+        let r5 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r5);
 
         // Row 6
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 5},
-            Tile { meta: g.clone(), x: 1, y: 5},
-            Tile { meta: g.clone(), x: 2, y: 5},
-            Tile { meta: g.clone(), x: 3, y: 5},
-            Tile { meta: g.clone(), x: 4, y: 5},
-            Tile { meta: g.clone(), x: 5, y: 5},
-            Tile { meta: g.clone(), x: 6, y: 5},
-            Tile { meta: g.clone(), x: 7, y: 5},
-            Tile { meta: g.clone(), x: 8, y: 5},
-            Tile { meta: g.clone(), x: 9, y: 5},
-        ]);
+        let r6 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r6);
 
         // Row 7
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 6},
-            Tile { meta: g.clone(), x: 1, y: 6},
-            Tile { meta: g.clone(), x: 2, y: 6},
-            Tile { meta: g.clone(), x: 3, y: 6},
-            Tile { meta: g.clone(), x: 4, y: 6},
-            Tile { meta: g.clone(), x: 5, y: 6},
-            Tile { meta: g.clone(), x: 6, y: 6},
-            Tile { meta: g.clone(), x: 7, y: 6},
-            Tile { meta: g.clone(), x: 8, y: 6},
-            Tile { meta: g.clone(), x: 9, y: 6},
-        ]);
+        let r7 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_water_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r7);
 
         // Row 8
-        self.data.push(vec![
-            Tile { meta: g.clone(), x: 0, y: 7},
-            Tile { meta: g.clone(), x: 1, y: 7},
-            Tile { meta: g.clone(), x: 2, y: 7},
-            Tile { meta: g.clone(), x: 3, y: 7},
-            Tile { meta: g.clone(), x: 4, y: 7},
-            Tile { meta: g.clone(), x: 5, y: 7},
-            Tile { meta: g.clone(), x: 6, y: 7},
-            Tile { meta: g.clone(), x: 7, y: 7},
-            Tile { meta: g.clone(), x: 8, y: 7},
-            Tile { meta: g.clone(), x: 9, y: 7},
-        ]);
+        let r8 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r8);
+
+        // Row 9
+        let r9 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r9);
+
+        // Row 10
+        let r10 = vec![
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+            self.generate_grass_tile(),
+        ];
+        self.data.push(r10);
     }
 }
