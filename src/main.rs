@@ -8,11 +8,12 @@ use ggez::conf::Conf;
 use ggez::event;
 use ggez::{GameResult, Context};
 use ggez::graphics;
-use ggez::graphics::{Image, DrawMode, Point};
 use std::time::Duration;
-use assets::AssetLoader;
 use world::World;
 use camera::Camera;
+
+const VIEWPORT_HEIGHT: u32 = 400;
+const VIEWPORT_WIDTH: u32 = 400;
 
 struct MainState {
     world: World,
@@ -84,8 +85,8 @@ fn main() {
     let c = Conf {
         window_title: String::from("World's best game"),
         window_icon: String::from(""),
-        window_height: 800,
-        window_width: 800,
+        window_height: VIEWPORT_HEIGHT,
+        window_width: VIEWPORT_WIDTH,
         vsync: false,
         resizable: false
     };
@@ -94,7 +95,7 @@ fn main() {
     let mut world = world::World::new(String::from("New game"), ctx);
     world.load_world_1();
 
-    let cam = camera::Camera::new(800, 800, world.get_width(), world.get_height());
+    let cam = camera::Camera::new(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, world.get_width(), world.get_height());
     let state = &mut MainState::new(world, cam).unwrap();
     event::run(ctx, state).unwrap();
 
