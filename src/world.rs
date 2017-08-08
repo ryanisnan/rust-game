@@ -4,8 +4,7 @@ extern crate ggez;
 use assets::AssetLoader;
 use ggez::graphics::Image;
 use ggez::Context;
-use entity::DecorationLibrary;
-use entity::Decoration;
+use entity::{DecorationLibrary, Decoration, DecorationType};
 
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -129,7 +128,7 @@ impl World {
         tmp_rows
     }
 
-    fn generate_grass_tile(&self) -> Tile {
+    fn generate_grass_tile(&self, decorations: Option<Vec<Decoration>>) -> Tile {
         let g = self.tile_library.tiles[&TileType::Grass].clone();
         Tile { meta: g, decorations: None}
     }
@@ -142,151 +141,156 @@ impl World {
     pub fn load_world_1(&mut self) {
         // Row 1
         let r1 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r1);
 
         // Row 2
         let r2 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r2);
 
         // Row 3
+        let b = self.decorations_library.decorations[&DecorationType::Bush1x1].clone();
+        let b1 = Decoration {
+            flyweight: b,
+        };
+
         let r3 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(Some(vec![b1])),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r3);
 
         // Row 4
         let r4 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r4);
 
         // Row 5
         let r5 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r5);
 
         // Row 6
         let r6 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r6);
 
         // Row 7
         let r7 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
             self.generate_water_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r7);
 
         // Row 8
         let r8 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r8);
 
         // Row 9
         let r9 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r9);
 
         // Row 10
         let r10 = vec![
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
-            self.generate_grass_tile(),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
+            self.generate_grass_tile(None),
         ];
         self.data.push(r10);
     }
