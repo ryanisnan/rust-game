@@ -98,5 +98,4 @@ fn main() {
     let cam = camera::Camera::new(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, world.get_width(), world.get_height());
     let state = &mut MainState::new(world, cam).unwrap();
     event::run(ctx, state).unwrap();
-
 }
