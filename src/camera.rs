@@ -36,8 +36,8 @@ impl Camera {
             top: 0.0,
             bottom: viewport_height as f32,
 
-            horiz_scroll: 10.0,
-            vert_scroll: 10.0,
+            horiz_scroll: 32.0,
+            vert_scroll: 32.0,
 
             min_x: 0.0,
             max_x: max_x as f32,

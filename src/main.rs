@@ -13,8 +13,8 @@ use std::time::Duration;
 use world::World;
 use camera::Camera;
 
-const VIEWPORT_HEIGHT: u32 = 640;
-const VIEWPORT_WIDTH: u32 = 640;
+const VIEWPORT_HEIGHT: u32 = 768;
+const VIEWPORT_WIDTH: u32 = 1024;
 
 struct MainState {
     world: World,

@@ -9,6 +9,8 @@ pub trait Entity {} // Things that can be placed into the world will all impleme
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub enum DecorationType {
     Bush1x1,
+    Stone,
+    Stones,
 }
 
 #[derive(Debug)]
@@ -33,7 +35,9 @@ impl DecorationLibrary {
     }
 
     fn load_assets(&mut self, ctx: &mut Context, asset_loader: &mut AssetLoader) {
-        self.decorations.insert(DecorationType::Bush1x1, Rc::new(DecorationFlyweight { image: asset_loader.load_image(ctx, "/bush-1.png")}));
+        self.decorations.insert(DecorationType::Bush1x1, Rc::new(DecorationFlyweight { image: asset_loader.load_image(ctx, "/bush1.png")}));
+        self.decorations.insert(DecorationType::Stone, Rc::new(DecorationFlyweight { image: asset_loader.load_image(ctx, "/stone.png")}));
+        self.decorations.insert(DecorationType::Stones, Rc::new(DecorationFlyweight { image: asset_loader.load_image(ctx, "/stones.png")}));
     }
 }
 

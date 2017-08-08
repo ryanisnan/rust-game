@@ -9,15 +9,40 @@ use entity::{DecorationLibrary, Decoration, DecorationType};
 use std::collections::HashMap;
 use std::rc::Rc;
 
-pub const TILE_WIDTH: u32 = 64;
-pub const TILE_HEIGHT: u32 = 64;
+pub const TILE_WIDTH: u32 = 128;
+pub const TILE_HEIGHT: u32 = 128;
 
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 enum TileType {
     // Basic enum listing the various types of tiles within the world
-    Grass,
-    Water
+    GrassLight,
+    GrassLight2,
+    GrassLight3,
+    GrassDark,
+    Sand,
+    Sand2,
+    Sand3,
+    GrassSandNW,
+    GrassSandN,
+    GrassSandN2,
+    GrassSandN3,
+    GrassSandNE,
+    GrassSandE,
+    GrassSandE2,
+    GrassSandE3,
+    GrassSandSE,
+    GrassSandS,
+    GrassSandS2,
+    GrassSandS3,
+    GrassSandSW,
+    GrassSandW,
+    GrassSandW2,
+    GrassSandW3,
+    SandGrassNW,
+    SandGrassNE,
+    SandGrassSE,
+    SandGrassSW,
 }
 
 #[derive(Debug)]
@@ -52,8 +77,33 @@ impl TileLibrary {
     }
 
     fn populate(&mut self, ctx: &mut Context, asset_loader: &mut AssetLoader) {
-        self.tiles.insert(TileType::Grass, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-1.png"), is_walkable: true }));
-        self.tiles.insert(TileType::Water, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/water-3.png"), is_walkable: false }));
+        self.tiles.insert(TileType::GrassLight, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/lgrass.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassLight2, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/lgrass2.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassLight3, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/lgrass3.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassDark, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/dgrass.png"), is_walkable: true }));
+        self.tiles.insert(TileType::Sand, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/sand.png"), is_walkable: true }));
+        self.tiles.insert(TileType::Sand2, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/sand2.png"), is_walkable: true }));
+        self.tiles.insert(TileType::Sand3, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/sand3.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandNW, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-nw.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandN, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-n.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandN2, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-n2.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandN3, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-n3.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandNE, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-ne.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandE, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-e.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandE2, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-e2.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandE3, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-e3.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandSE, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-se.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandS, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-s.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandS2, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-s2.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandS3, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-s3.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandSW, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-sw.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandW, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-w.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandW2, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-w2.png"), is_walkable: true }));
+        self.tiles.insert(TileType::GrassSandW3, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/grass-sand-w3.png"), is_walkable: true }));
+        self.tiles.insert(TileType::SandGrassNW, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/sand-grass-nw.png"), is_walkable: true }));
+        self.tiles.insert(TileType::SandGrassNE, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/sand-grass-ne.png"), is_walkable: true }));
+        self.tiles.insert(TileType::SandGrassSE, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/sand-grass-se.png"), is_walkable: true }));
+        self.tiles.insert(TileType::SandGrassSW, Rc::new(TileMeta { image: asset_loader.load_image(ctx, "/sand-grass-sw.png"), is_walkable: true }));
     }
 }
 
@@ -129,124 +179,118 @@ impl World {
     }
 
     fn generate_grass_tile(&self, decorations: Option<Vec<Decoration>>) -> Tile {
-        let g = self.tile_library.tiles[&TileType::Grass].clone();
+        let g = self.tile_library.tiles[&TileType::GrassLight].clone();
         Tile { meta: g, decorations: decorations}
     }
 
     fn generate_water_tile(&self, decorations: Option<Vec<Decoration>>) -> Tile {
-        let w = self.tile_library.tiles[&TileType::Water].clone();
+        let w = self.tile_library.tiles[&TileType::Sand].clone();
         Tile { meta: w, decorations: decorations}
     }
 
     pub fn load_world_1(&mut self) {
         // Row 1
         let r1 = vec![
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
         ];
         self.data.push(r1);
 
         // Row 2
         let r2 = vec![
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: Some(vec![Decoration{flyweight: self.decorations_library.decorations[&DecorationType::Bush1x1].clone()}])},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
         ];
         self.data.push(r2);
 
         // Row 3
-        let b = self.decorations_library.decorations[&DecorationType::Bush1x1].clone();
-        let b1 = Decoration {
-            flyweight: b,
-        };
-        println!("Bush? {:?}", b1);
-
         let r3 = vec![
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(Some(vec![b1])),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandNW].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandN].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandN3].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandNE].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
         ];
         self.data.push(r3);
 
         // Row 4
         let r4 = vec![
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandSW].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::SandGrassNE].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::Sand].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandE3].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
         ];
         self.data.push(r4);
 
         // Row 5
         let r5 = vec![
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandSW].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandS].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassSandSE].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
         ];
         self.data.push(r5);
 
         // Row 6
         let r6 = vec![
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: Some(vec![Decoration{flyweight: self.decorations_library.decorations[&DecorationType::Stones].clone()}])},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
         ];
         self.data.push(r6);
 
         // Row 7
         let r7 = vec![
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_water_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
-            self.generate_grass_tile(None),
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
+            Tile { meta: self.tile_library.tiles[&TileType::GrassLight].clone(), decorations: None},
         ];
         self.data.push(r7);
 
