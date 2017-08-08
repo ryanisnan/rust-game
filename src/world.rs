@@ -7,7 +7,6 @@ use ggez::Context;
 
 use std::collections::HashMap;
 use std::rc::Rc;
-use std::hash::Hash;
 
 pub const TILE_WIDTH: u32 = 64;
 pub const TILE_HEIGHT: u32 = 64;
