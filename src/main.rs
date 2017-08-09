@@ -1,17 +1,15 @@
 extern crate ggez;
-
-pub mod world;
-pub mod camera;
-pub mod assets;
-pub mod entity;
+extern crate rusty_engine;
 
 use ggez::conf::Conf;
 use ggez::event;
 use ggez::{GameResult, Context};
 use ggez::graphics;
 use std::time::Duration;
-use world::World;
-use camera::Camera;
+use rusty_engine::world;
+use rusty_engine::camera;
+use rusty_engine::world::World;
+use rusty_engine::camera::Camera;
 
 const VIEWPORT_HEIGHT: u32 = 768;
 const VIEWPORT_WIDTH: u32 = 1024;

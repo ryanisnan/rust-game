@@ -4,10 +4,8 @@ version = "0.1.0"
 authors = ["ryanisnan <ryanisnan@gmail.com>"]
 
 [dependencies]
-rand = "0.3.16"
+# rusty-engine = "0.1.0"
 ggez = "0.3.3"
 
-[features]
-# If this feature is enabled, it will add <cargo root dir>/resources/ to
-# the resource search path.
-cargo-resource-root = []
+[dependencies.rusty-engine]
+path = "../rusty-engine"
