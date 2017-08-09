@@ -8,11 +8,50 @@ use ggez::graphics;
 use std::time::Duration;
 use rusty_engine::world;
 use rusty_engine::camera;
-use rusty_engine::world::World;
+use rusty_engine::world::{World, TileType, TileLibrary, Tile};
+use rusty_engine::entity::{DecorationType, DecorationLibrary, Decoration};
 use rusty_engine::camera::Camera;
+use rusty_engine::assets::AssetLoader;
 
 const VIEWPORT_HEIGHT: u32 = 768;
 const VIEWPORT_WIDTH: u32 = 1024;
+
+
+fn populate_tile_library(tile_lib: &mut TileLibrary, asset_loader: &mut AssetLoader, ctx: &mut Context) {
+    tile_lib.load("GrassLight", TileType { image: asset_loader.load_image(ctx, "/lgrass.png"), is_walkable: true });
+    tile_lib.load("GrassLight2", TileType { image: asset_loader.load_image(ctx, "/lgrass2.png"), is_walkable: true });
+    tile_lib.load("GrassLight3", TileType { image: asset_loader.load_image(ctx, "/lgrass3.png"), is_walkable: true });
+    tile_lib.load("GrassDark", TileType { image: asset_loader.load_image(ctx, "/dgrass.png"), is_walkable: true });
+    tile_lib.load("Sand", TileType { image: asset_loader.load_image(ctx, "/sand.png"), is_walkable: true });
+    tile_lib.load("Sand2", TileType { image: asset_loader.load_image(ctx, "/sand2.png"), is_walkable: true });
+    tile_lib.load("Sand3", TileType { image: asset_loader.load_image(ctx, "/sand3.png"), is_walkable: true });
+    tile_lib.load("GrassSandNW", TileType { image: asset_loader.load_image(ctx, "/grass-sand-nw.png"), is_walkable: true });
+    tile_lib.load("GrassSandN", TileType { image: asset_loader.load_image(ctx, "/grass-sand-n.png"), is_walkable: true });
+    tile_lib.load("GrassSandN2", TileType { image: asset_loader.load_image(ctx, "/grass-sand-n2.png"), is_walkable: true });
+    tile_lib.load("GrassSandN3", TileType { image: asset_loader.load_image(ctx, "/grass-sand-n3.png"), is_walkable: true });
+    tile_lib.load("GrassSandNE", TileType { image: asset_loader.load_image(ctx, "/grass-sand-ne.png"), is_walkable: true });
+    tile_lib.load("GrassSandE", TileType { image: asset_loader.load_image(ctx, "/grass-sand-e.png"), is_walkable: true });
+    tile_lib.load("GrassSandE2", TileType { image: asset_loader.load_image(ctx, "/grass-sand-e2.png"), is_walkable: true });
+    tile_lib.load("GrassSandE3", TileType { image: asset_loader.load_image(ctx, "/grass-sand-e3.png"), is_walkable: true });
+    tile_lib.load("GrassSandSE", TileType { image: asset_loader.load_image(ctx, "/grass-sand-se.png"), is_walkable: true });
+    tile_lib.load("GrassSandS", TileType { image: asset_loader.load_image(ctx, "/grass-sand-s.png"), is_walkable: true });
+    tile_lib.load("GrassSandS2", TileType { image: asset_loader.load_image(ctx, "/grass-sand-s2.png"), is_walkable: true });
+    tile_lib.load("GrassSandS3", TileType { image: asset_loader.load_image(ctx, "/grass-sand-s3.png"), is_walkable: true });
+    tile_lib.load("GrassSandSW", TileType { image: asset_loader.load_image(ctx, "/grass-sand-sw.png"), is_walkable: true });
+    tile_lib.load("GrassSandW", TileType { image: asset_loader.load_image(ctx, "/grass-sand-w.png"), is_walkable: true });
+    tile_lib.load("GrassSandW2", TileType { image: asset_loader.load_image(ctx, "/grass-sand-w2.png"), is_walkable: true });
+    tile_lib.load("GrassSandW3", TileType { image: asset_loader.load_image(ctx, "/grass-sand-w3.png"), is_walkable: true });
+    tile_lib.load("SandGrassNW", TileType { image: asset_loader.load_image(ctx, "/sand-grass-nw.png"), is_walkable: true });
+    tile_lib.load("SandGrassNE", TileType { image: asset_loader.load_image(ctx, "/sand-grass-ne.png"), is_walkable: true });
+    tile_lib.load("SandGrassSE", TileType { image: asset_loader.load_image(ctx, "/sand-grass-se.png"), is_walkable: true });
+    tile_lib.load("SandGrassSW", TileType { image: asset_loader.load_image(ctx, "/sand-grass-sw.png"), is_walkable: true });
+}
+
+fn populate_decoration_library(decoration_lib: &mut DecorationLibrary, asset_loader: &mut AssetLoader, ctx: &mut Context) {
+    decoration_lib.load("Bush", DecorationType { image: asset_loader.load_image(ctx, "/bush1.png") });
+    decoration_lib.load("Stone", DecorationType { image: asset_loader.load_image(ctx, "/stone.png") });
+    decoration_lib.load("Stones", DecorationType { image: asset_loader.load_image(ctx, "/stones.png") });
+}
 
 struct MainState {
     world: World,
@@ -50,8 +89,7 @@ impl event::EventHandler for MainState {
                 graphics::draw(ctx, &*tile.meta.image, p, 0.0)?;
 
                 for decoration in tile.decorations.iter() {
-                    // println!("{:?}", decoration);
-                    graphics::draw(ctx, &*decoration[0].flyweight.image, p, 0.0);
+                    graphics::draw(ctx, &*decoration[0].meta.image, p, 0.0);
                 }
 
             }
@@ -86,6 +124,112 @@ impl event::EventHandler for MainState {
     }
 }
 
+fn load_world_1(world: &mut World) {
+    // Row 1
+    let r1 = vec![
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r1);
+
+    // Row 2
+    let r2 = vec![
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: world.decorations_library.decorations["Bush"].clone()}])},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r2);
+
+    // Row 3
+    let r3 = vec![
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandNW"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandN"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandN3"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandNE"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r3);
+
+    // Row 4
+    let r4 = vec![
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandSW"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["SandGrassNE"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["Sand"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandE3"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r4);
+
+    // Row 5
+    let r5 = vec![
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandSW"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandS"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassSandSE"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r5);
+
+    // Row 6
+    let r6 = vec![
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: world.decorations_library.decorations["Stones"].clone()}])},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r6);
+
+    // Row 7
+    let r7 = vec![
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: world.decorations_library.decorations["Stones"].clone()}])},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: world.decorations_library.decorations["Stones"].clone()}])},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: world.decorations_library.decorations["Stones"].clone()}])},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: world.tile_library.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r7);
+}
 
 fn main() {
     let c = Conf {
@@ -98,8 +242,11 @@ fn main() {
     };
     let ctx = &mut Context::load_from_conf("super_simple", "ggez", c).unwrap();
 
-    let mut world = world::World::new(String::from("New game"), ctx);
-    world.load_world_1();
+    let mut world = world::World::new(String::from("New game"));
+    world.rows = 7;
+    populate_tile_library(&mut world.tile_library, &mut world.asset_loader, ctx);
+    populate_decoration_library(&mut world.decorations_library, &mut world.asset_loader, ctx);
+    load_world_1(&mut world);
 
     let cam = camera::Camera::new(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, world.get_width(), world.get_height());
     let state = &mut MainState::new(world, cam).unwrap();
