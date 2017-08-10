@@ -4,8 +4,10 @@ version = "0.1.0"
 authors = ["ryanisnan <ryanisnan@gmail.com>"]
 
 [dependencies]
-# rusty-engine = "0.1.0"
 ggez = "0.3.3"
 
 [dependencies.rusty-engine]
 path = "../rusty-engine"
+
+[features]
+cargo-resource-root = []
