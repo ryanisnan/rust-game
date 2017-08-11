@@ -5,7 +5,7 @@ use ggez::{GameResult, Context};
 use ggez::conf::Conf;
 use ggez::event;
 use ggez::graphics;
-use ggez::graphics::Image;
+use ggez::graphics::{Image, Rect};
 use std::time::Duration;
 
 use rusty_engine::camera;
@@ -80,10 +80,9 @@ impl event::EventHandler for MainState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         graphics::clear(ctx);
 
-
-        let tiles = self.world.get_tiles(self.camera.get_left(), self.camera.get_right(), self.camera.get_top(), self.camera.get_bottom());
-        let x_offset = self.camera.get_left() % world::TILE_WIDTH as f32;
-        let y_offset = self.camera.get_top() % world::TILE_HEIGHT as f32;
+        let tiles = self.world.get_visible_subset(self.camera.to_rect());
+        let x_offset = self.camera.left() % world::TILE_WIDTH as f32;
+        let y_offset = self.camera.top() % world::TILE_HEIGHT as f32;
 
         for (i, row) in tiles.iter().enumerate() {
             let i = i as f32;
@@ -256,7 +255,7 @@ fn main() {
     load_world_1(&mut world, &tile_lib, &decoration_lib);
     world.rows = 7;
 
-    let cam = camera::Camera::new(VIEWPORT_HEIGHT, VIEWPORT_WIDTH, world.get_width(), world.get_height());
+    let cam = camera::Camera::new(Rect {x: VIEWPORT_WIDTH as f32 / 2.0, y: VIEWPORT_HEIGHT as f32 / 2.0, w: VIEWPORT_WIDTH as f32, h: VIEWPORT_HEIGHT as f32}, Rect{x: world.width() as f32 / 2.0, y: world.height() as f32 / 2.0, w: world.width() as f32, h: world.height() as f32});
     let state = &mut MainState::new(world, cam).unwrap();
     event::run(ctx, state).unwrap();
 }
