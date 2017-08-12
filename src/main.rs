@@ -14,9 +14,10 @@ use rusty_engine::decoration::{DecorationPrototype, DecorationLibrary, Decoratio
 use rusty_engine::tile::{TilePrototype, TileLibrary, Tile};
 use rusty_engine::world;
 use rusty_engine::world::World;
+use rusty_engine::renderer::Renderer;
 
-const VIEWPORT_HEIGHT: u32 = 768;
-const VIEWPORT_WIDTH: u32 = 1024;
+const VIEWPORT_HEIGHT: u32 = 300;
+const VIEWPORT_WIDTH: u32 = 300;
 
 fn load_image(ctx: &mut Context, file_path: &str) -> Image {
      Image::new(ctx, file_path).unwrap()
@@ -59,16 +60,24 @@ fn populate_decoration_library(decoration_lib: &mut DecorationLibrary, ctx: &mut
 }
 
 struct MainState {
+    renderer: Renderer,
+    tile_lib: TileLibrary,
+    decoration_lib: DecorationLibrary,
     world: World,
     camera: Camera,
+    changed: bool
 }
 
 impl MainState {
-    fn new(world: World, camera: Camera) -> GameResult<MainState> {
-        Ok(MainState {
+    fn new(world: World, camera: Camera) -> MainState {
+        MainState {
+            renderer: Renderer::new(),
+            tile_lib: TileLibrary::new(),
+            decoration_lib: DecorationLibrary::new(),
             world,
             camera,
-        })
+            changed: true,
+        }
     }
 }
 
@@ -78,31 +87,46 @@ impl event::EventHandler for MainState {
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
-        graphics::clear(ctx);
+        if self.changed {
+            graphics::clear(ctx);
+            self.world.show_indexes(&self.camera);
+            let tiles = self.world.get_visible_subset(&self.camera);
 
-        let tiles = self.world.get_visible_subset(self.camera.to_rect());
-        let x_offset = self.camera.left() % world::TILE_WIDTH as f32;
-        let y_offset = self.camera.top() % world::TILE_HEIGHT as f32;
-
-        for (i, row) in tiles.iter().enumerate() {
-            let i = i as f32;
-            for (j, tile) in row.iter().enumerate() {
-                let j = j as f32;
-
-                let p = graphics::Point::new(j * world::TILE_WIDTH as f32 + world::TILE_WIDTH as f32 / 2.0 - x_offset, i * world::TILE_HEIGHT as f32 + world::TILE_HEIGHT as f32 / 2.0 - y_offset);
-                graphics::draw(ctx, &tile.meta.image, p, 0.0)?;
-
-                for decoration in tile.decorations.iter() {
-                    graphics::draw(ctx, &decoration[0].meta.image, p, 0.0);
-                }
-
+            let mut x_offset = 0.0;
+            if (self.camera.left() % world::TILE_WIDTH as f32).abs() != 0.0 {
+                x_offset = world::TILE_WIDTH as f32 - (self.camera.left() % world::TILE_WIDTH as f32).abs();
             }
+            // let x_offset = 128.0 - ().abs();
+            let y_offset = self.camera.top().abs() % world::TILE_HEIGHT as f32;
+
+            for (i, row) in tiles.iter().enumerate() {
+                let i = i as f32;
+                for (j, tile) in row.iter().enumerate() {
+                    let j = j as f32;
+
+                    let t_x: f32 = j * world::TILE_WIDTH as f32 + world::TILE_WIDTH as f32 / 2.0 - x_offset;
+                    let t_y: f32 = i * world::TILE_HEIGHT as f32 + world::TILE_HEIGHT as f32 / 2.0;
+                    let mut p = graphics::Point::new(t_x, t_y);
+
+                    if i == 0.0 {
+                        println!("tx: {}, ty: {} (Offset: {})", t_x, t_y, x_offset);
+                    }
+                    graphics::draw(ctx, &tile.meta.image, p, 0.0)?;
+
+                    for decoration in tile.decorations.iter() {
+                        graphics::draw(ctx, &decoration[0].meta.image, p, 0.0)?;
+                    }
+                }
+            }
+
+            self.changed = false;
         }
         graphics::present(ctx);
         Ok(())
     }
 
     fn key_down_event(&mut self, keycode: event::Keycode, keymod: event::Mod, repeat: bool) {
+        self.changed = true;
         match keycode {
             event::Keycode::Left => {
                 self.camera.move_left();
@@ -119,12 +143,14 @@ impl event::EventHandler for MainState {
             _ => {
             }
         }
-        println!(
-            "Key pressed: {:?}, modifier {:?}, repeat: {}",
-            keycode,
-            keymod,
-            repeat
-        );
+
+        // self.world.show_indexes(&self.camera);
+        // println!(
+            // "Key pressed: {:?}, modifier {:?}, repeat: {}",
+            // keycode,
+            // keymod,
+            // repeat
+        // );
     }
 }
 
@@ -233,6 +259,20 @@ fn load_world_1(world: &mut World, tile_lib: &TileLibrary, decoration_lib: &Deco
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
     ];
     world.data.push(r7);
+
+    let r8 = vec![
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r8);
 }
 
 fn main() {
@@ -253,9 +293,8 @@ fn main() {
     populate_decoration_library(&mut decoration_lib, ctx);
 
     load_world_1(&mut world, &tile_lib, &decoration_lib);
-    world.rows = 7;
 
-    let cam = camera::Camera::new(Rect {x: VIEWPORT_WIDTH as f32 / 2.0, y: VIEWPORT_HEIGHT as f32 / 2.0, w: VIEWPORT_WIDTH as f32, h: VIEWPORT_HEIGHT as f32}, Rect{x: world.width() as f32 / 2.0, y: world.height() as f32 / 2.0, w: world.width() as f32, h: world.height() as f32});
-    let state = &mut MainState::new(world, cam).unwrap();
-    event::run(ctx, state).unwrap();
+    let cam = camera::Camera::new(Rect {x: 0.0, y: 0.0, w: VIEWPORT_WIDTH as f32, h: VIEWPORT_HEIGHT as f32}, Rect{x: 0.0, y: 0.0, w: world.width() as f32, h: world.height() as f32});
+    let mut state = MainState::new(world, cam);
+    event::run(ctx,&mut state).unwrap();
 }
