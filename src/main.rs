@@ -89,15 +89,17 @@ impl event::EventHandler for MainState {
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         if self.changed {
             graphics::clear(ctx);
-            self.world.show_indexes(&self.camera);
+
             let tiles = self.world.get_visible_subset(&self.camera);
 
-            let mut x_offset = 0.0;
-            if (self.camera.left() % world::TILE_WIDTH as f32).abs() != 0.0 {
-                x_offset = world::TILE_WIDTH as f32 - (self.camera.left() % world::TILE_WIDTH as f32).abs();
-            }
-            // let x_offset = 128.0 - ().abs();
-            let y_offset = self.camera.top().abs() % world::TILE_HEIGHT as f32;
+            println!("Currently looking at {} columns", tiles.len());
+            self.world.show_indexes(&self.camera);
+
+            println!("Camera Left: {}", self.camera.left());
+            println!("Camera Right: {}", self.camera.right());
+
+            let x_offset = (self.camera.left() - self.camera.boundaries.left()).abs() % world::TILE_WIDTH as f32;
+            let y_offset = (self.camera.top() - self.camera.boundaries.top()).abs() % world::TILE_HEIGHT as f32;
 
             for (i, row) in tiles.iter().enumerate() {
                 let i = i as f32;
@@ -105,8 +107,8 @@ impl event::EventHandler for MainState {
                     let j = j as f32;
 
                     let t_x: f32 = j * world::TILE_WIDTH as f32 + world::TILE_WIDTH as f32 / 2.0 - x_offset;
-                    let t_y: f32 = i * world::TILE_HEIGHT as f32 + world::TILE_HEIGHT as f32 / 2.0;
-                    let mut p = graphics::Point::new(t_x, t_y);
+                    let t_y: f32 = i * world::TILE_HEIGHT as f32 + world::TILE_HEIGHT as f32 / 2.0 - y_offset;
+                    let p = graphics::Point::new(t_x, t_y);
 
                     if i == 0.0 {
                         println!("tx: {}, ty: {} (Offset: {})", t_x, t_y, x_offset);
@@ -155,124 +157,50 @@ impl event::EventHandler for MainState {
 }
 
 fn load_world_1(world: &mut World, tile_lib: &TileLibrary, decoration_lib: &DecorationLibrary) {
-    // Row 1
-    let r1 = vec![
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-    ];
-    world.data.push(r1);
-
-    // Row 2
-    let r2 = vec![
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Bush"].clone()}])},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-    ];
-    world.data.push(r2);
-
-    // Row 3
-    let r3 = vec![
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandNW"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandN"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandN3"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandNE"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-    ];
-    world.data.push(r3);
-
-    // Row 4
-    let r4 = vec![
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandSW"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["SandGrassNE"].clone(), decorations: None},
+    let r = vec![
         Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandE3"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
     ];
-    world.data.push(r4);
+    world.data.push(r);
 
-    // Row 5
-    let r5 = vec![
+    let r = vec![
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandSW"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandS"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassSandSE"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
     ];
-    world.data.push(r5);
+    world.data.push(r);
 
-    // Row 6
-    let r6 = vec![
+    let r = vec![
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
     ];
-    world.data.push(r6);
+    world.data.push(r);
 
-    // Row 7
-    let r7 = vec![
+    let r = vec![
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
     ];
-    world.data.push(r7);
+    world.data.push(r);
 
-    let r8 = vec![
+    let r = vec![
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
     ];
-    world.data.push(r8);
+    world.data.push(r);
 }
 
 fn main() {
@@ -294,7 +222,8 @@ fn main() {
 
     load_world_1(&mut world, &tile_lib, &decoration_lib);
 
-    let cam = camera::Camera::new(Rect {x: 0.0, y: 0.0, w: VIEWPORT_WIDTH as f32, h: VIEWPORT_HEIGHT as f32}, Rect{x: 0.0, y: 0.0, w: world.width() as f32, h: world.height() as f32});
+    let boundaries = Rect{x: 0.0, y: 0.0, w: world.width() as f32, h: world.height() as f32};
+    let cam = camera::Camera::new(Rect {x: boundaries.left() + VIEWPORT_WIDTH as f32 / 2.0, y: boundaries.top() - VIEWPORT_HEIGHT as f32 / 2.0, w: VIEWPORT_WIDTH as f32, h: VIEWPORT_HEIGHT as f32}, boundaries);
     let mut state = MainState::new(world, cam);
     event::run(ctx,&mut state).unwrap();
 }
