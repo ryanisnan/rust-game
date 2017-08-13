@@ -16,8 +16,8 @@ use rusty_engine::world;
 use rusty_engine::world::World;
 use rusty_engine::renderer::Renderer;
 
-const VIEWPORT_HEIGHT: u32 = 300;
-const VIEWPORT_WIDTH: u32 = 300;
+const VIEWPORT_HEIGHT: u32 = 768;
+const VIEWPORT_WIDTH: u32 = 1024;
 
 fn load_image(ctx: &mut Context, file_path: &str) -> Image {
      Image::new(ctx, file_path).unwrap()
@@ -145,60 +145,126 @@ impl event::EventHandler for MainState {
             _ => {
             }
         }
-
-        // self.world.show_indexes(&self.camera);
-        // println!(
-            // "Key pressed: {:?}, modifier {:?}, repeat: {}",
-            // keycode,
-            // keymod,
-            // repeat
-        // );
     }
 }
 
 fn load_world_1(world: &mut World, tile_lib: &TileLibrary, decoration_lib: &DecorationLibrary) {
+    // Row 1
     let r = vec![
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r);
+
+    // Row 2
+    let r = vec![
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Bush"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r);
+
+    // Row 3
+    let r = vec![
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandNW"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandN"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandN3"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandNE"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r);
+
+    // Row 4
+    let r = vec![
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandSW"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["SandGrassNE"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandE3"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r);
+
+    // Row 5
+    let r = vec![
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandSW"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandS"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassSandSE"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r);
+
+    // Row 6
+    let r = vec![
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+    ];
+    world.data.push(r);
+
+    // Row 7
+    let r = vec![
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
     ];
     world.data.push(r);
 
     let r = vec![
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-    ];
-    world.data.push(r);
-
-    let r = vec![
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
-    ];
-    world.data.push(r);
-
-    let r = vec![
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-    ];
-    world.data.push(r);
-
-    let r = vec![
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["Sand"].clone(), decorations: None},
     ];
     world.data.push(r);
 }
