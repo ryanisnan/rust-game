@@ -10,11 +10,10 @@ use std::time::Duration;
 
 use rusty_engine::camera;
 use rusty_engine::camera::Camera;
-use rusty_engine::decoration::{DecorationPrototype, DecorationLibrary, Decoration};
+use rusty_engine::entity::decoration::{DecorationPrototype, DecorationLibrary, Decoration};
 use rusty_engine::tile::{TilePrototype, TileLibrary, Tile};
 use rusty_engine::world;
 use rusty_engine::world::World;
-use rusty_engine::renderer::Renderer;
 
 const VIEWPORT_HEIGHT: u32 = 768;
 const VIEWPORT_WIDTH: u32 = 1024;
@@ -60,7 +59,6 @@ fn populate_decoration_library(decoration_lib: &mut DecorationLibrary, ctx: &mut
 }
 
 struct MainState {
-    renderer: Renderer,
     tile_lib: TileLibrary,
     decoration_lib: DecorationLibrary,
     world: World,
@@ -71,7 +69,6 @@ struct MainState {
 impl MainState {
     fn new(world: World, camera: Camera) -> MainState {
         MainState {
-            renderer: Renderer::new(),
             tile_lib: TileLibrary::new(),
             decoration_lib: DecorationLibrary::new(),
             world,
