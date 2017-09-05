@@ -18,6 +18,8 @@ use rusty_engine::world::World;
 const VIEWPORT_HEIGHT: u32 = 768;
 const VIEWPORT_WIDTH: u32 = 1024;
 
+pub mod player;
+
 fn load_image(ctx: &mut Context, file_path: &str) -> Image {
      Image::new(ctx, file_path).unwrap()
 }
