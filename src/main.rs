@@ -97,8 +97,6 @@ impl event::EventHandler for MainState {
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
-        let camera_ref = self.camera.borrow();
-
         if self.changed {
             graphics::clear(ctx);
 
@@ -110,8 +108,8 @@ impl event::EventHandler for MainState {
             // println!("Camera Left: {}", self.camera.left());
             // println!("Camera Right: {}", self.camera.right());
 
-            let x_offset = (camera_ref.left() - camera_ref.boundaries.left()).abs() % world::TILE_WIDTH as f32;
-            let y_offset = (camera_ref.top() - camera_ref.boundaries.top()).abs() % world::TILE_HEIGHT as f32;
+            let x_offset = (&self.camera.borrow().left() - &self.camera.borrow().boundaries.left()).abs() % world::TILE_WIDTH as f32;
+            let y_offset = (&self.camera.borrow().top() - &self.camera.borrow().boundaries.top()).abs() % world::TILE_HEIGHT as f32;
 
             for (i, row) in tiles.iter().enumerate() {
                 let i = i as f32;
@@ -140,22 +138,22 @@ impl event::EventHandler for MainState {
     }
 
     fn key_down_event(&mut self, keycode: event::Keycode, keymod: event::Mod, repeat: bool) {
-        let player = self.player.borrow_mut();
-        let mut camera_ref = self.camera.borrow_mut();
+        let mut cam_ref = self.camera.borrow_mut();
 
         self.changed = true;
+
         match keycode {
             event::Keycode::Left => {
-                camera_ref.move_left();
+                cam_ref.move_left();
             },
             event::Keycode::Right => {
-                camera_ref.move_right();
+                cam_ref.move_right();
             },
             event::Keycode::Down => {
-                camera_ref.move_down();
+                cam_ref.move_down();
             },
             event::Keycode::Up => {
-                camera_ref.move_up();
+                cam_ref.move_up();
             },
             _ => {
             }
@@ -295,18 +293,23 @@ fn main() {
     };
     let ctx = &mut Context::load_from_conf("super_simple", "ggez", c).unwrap();
 
-    let mut world = world::World::new(String::from("New game"));
     let mut tile_lib = TileLibrary::new();
     let mut decoration_lib = DecorationLibrary::new();
+
+    let mut world = world::World::new(String::from("New game"));
+
     populate_tile_library(&mut tile_lib, ctx);
     populate_decoration_library(&mut decoration_lib, ctx);
 
     load_world_1(&mut world, &tile_lib, &decoration_lib);
 
     let boundaries = Rect{x: 0.0, y: 0.0, w: world.width() as f32, h: world.height() as f32};
-    let camera = RefCell::new(Camera::new(Rect {x: boundaries.left() + VIEWPORT_WIDTH as f32 / 2.0, y: boundaries.top() - VIEWPORT_HEIGHT as f32 / 2.0, w: VIEWPORT_WIDTH as f32, h: VIEWPORT_HEIGHT as f32}, boundaries));
-    let player = RefCell::new(Player::new());
 
-    let mut state = MainState::new(world, camera, player);
+    let mut camera = Camera::new(Rect {x: boundaries.left() + VIEWPORT_WIDTH as f32 / 2.0, y: boundaries.top() - VIEWPORT_HEIGHT as f32 / 2.0, w: VIEWPORT_WIDTH as f32, h: VIEWPORT_HEIGHT as f32}, boundaries);
+    let player = Player::new();
+
+    camera.bind_to(&player);
+
+    let mut state = MainState::new(world, RefCell::new(camera), RefCell::new(player));
     event::run(ctx, &mut state).unwrap();
 }
