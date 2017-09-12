@@ -13,6 +13,7 @@ use ggez::conf::Conf;
 use ggez::event;
 use ggez::graphics;
 use ggez::graphics::{Image, Rect};
+use ggez::graphics::Point;
 
 use rusty_engine::camera;
 use rusty_engine::camera::Camera;
@@ -22,6 +23,8 @@ use rusty_engine::observer::Observer;
 use rusty_engine::tile::{TilePrototype, TileLibrary, Tile};
 use rusty_engine::world;
 use rusty_engine::world::World;
+use rusty_engine::physics::Physics;
+use rusty_engine::physics::PhysicsAction;
 
 use player::Player;
 
@@ -145,15 +148,38 @@ impl event::EventHandler for MainState {
         match keycode {
             event::Keycode::Left => {
                 cam_ref.move_left();
+
+                let action = PhysicsAction::Move(self.player.borrow().generate_move_left_action());
+
+                if Physics::is_satisfied::<Player>(&self.world, &self.player.borrow(), Some(&action)) {
+                    Physics::execute::<Player>(&mut self.player.borrow_mut(), Some(&action));
+                }
             },
             event::Keycode::Right => {
                 cam_ref.move_right();
+
+                let action = PhysicsAction::Move(self.player.borrow().generate_move_right_action());
+
+                if Physics::is_satisfied::<Player>(&self.world, &self.player.borrow(), Some(&action)) {
+                    Physics::execute::<Player>(&mut self.player.borrow_mut(), Some(&action));
+                }
             },
             event::Keycode::Down => {
                 cam_ref.move_down();
+
+                let action = PhysicsAction::Move(self.player.borrow().generate_move_down_action());
+
+                if Physics::is_satisfied::<Player>(&self.world, &self.player.borrow(), Some(&action)) {
+                    Physics::execute::<Player>(&mut self.player.borrow_mut(), Some(&action));
+                }
             },
             event::Keycode::Up => {
                 cam_ref.move_up();
+                let action = PhysicsAction::Move(self.player.borrow().generate_move_up_action());
+
+                if Physics::is_satisfied::<Player>(&self.world, &self.player.borrow(), Some(&action)) {
+                    Physics::execute::<Player>(&mut self.player.borrow_mut(), Some(&action));
+                }
             },
             _ => {
             }
@@ -183,7 +209,7 @@ fn load_world_1(world: &mut World, tile_lib: &TileLibrary, decoration_lib: &Deco
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Bush"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Bush"].clone(), point: Point{x: 0.0, y: 0.0}}])},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
@@ -243,7 +269,7 @@ fn load_world_1(world: &mut World, tile_lib: &TileLibrary, decoration_lib: &Deco
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone(), point: Point{x: 0.0, y: 0.0}}])},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
@@ -259,9 +285,9 @@ fn load_world_1(world: &mut World, tile_lib: &TileLibrary, decoration_lib: &Deco
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
-        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: Some(vec![Decoration{meta: decoration_lib.decorations["Stones"].clone()}])},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
+        Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
         Tile { meta: tile_lib.tiles["GrassLight"].clone(), decorations: None},
     ];

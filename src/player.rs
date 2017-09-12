@@ -29,26 +29,34 @@ impl Player {
             distance: self.base_move_speed,
         }
     }
+
+    pub fn generate_move_down_action(&self) -> MovePhysicsAction {
+        MovePhysicsAction {
+            direction: Direction::Down,
+            distance: self.base_move_speed,
+        }
+    }
+
+    pub fn generate_move_left_action(&self) -> MovePhysicsAction {
+        MovePhysicsAction {
+            direction: Direction::Left,
+            distance: self.base_move_speed,
+        }
+    }
+
+    pub fn generate_move_right_action(&self) -> MovePhysicsAction {
+        MovePhysicsAction {
+            direction: Direction::Right,
+            distance: self.base_move_speed,
+        }
+    }
 }
 
 impl Entity for Player {
     fn is_moveable(&self) -> bool { true }
     fn is_visible(&self) -> bool { true }
 
-    // Commands for forecfully moving the player
-    fn move_up(&mut self, distance: f32) -> () {
-        self.point.y += distance;
-    }
-
-    fn move_down(&mut self, distance: f32) -> () {
-        self.point.y -= distance;
-    }
-
-    fn move_left(&mut self, distance: f32) -> () {
-        self.point.x -= distance;
-    }
-
-    fn move_right(&mut self, distance: f32) -> () {
-        self.point.x += distance;
+    fn get_point(&mut self) -> &mut Point {
+        &mut self.point
     }
 }
