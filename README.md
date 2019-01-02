@@ -9,3 +9,5 @@ The game so far is very limited, and can't really even be considered a "game" ye
 - World loading and rendering
 - Customizable asset library
 - Simple X/Y scrolling
+
+![sample.png](sample.png)
