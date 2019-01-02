@@ -10,4 +10,6 @@ The game so far is very limited, and can't really even be considered a "game" ye
 - Customizable asset library
 - Simple X/Y scrolling
 
+# What it looks like
+
 ![sample.png](sample.png)
